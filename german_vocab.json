@@ -3,6 +3,7 @@
     "word": "herummeckern",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to gripe, complain",
     "examples": ["Er muss ständig an allem herummeckern."],
     "set": "November"
@@ -11,6 +12,7 @@
     "word": "nörgeln",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to complain, nag",
     "examples": ["Er nörgelt den ganzen Tag über Kleinigkeiten."],
     "set": "November"
@@ -19,6 +21,7 @@
     "word": "stolpern",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to stumble",
     "examples": ["Er stolperte über eine lose Fliese."],
     "set": "November"
@@ -27,6 +30,7 @@
     "word": "Auftritt",
     "plural": "Auftritte",
     "gender": "der",
+    "pos": "noun",
     "meaning": "performance",
     "examples": ["die nächtlichen Auftritte"],
     "set": "November"
@@ -35,6 +39,7 @@
     "word": "Clou",
     "plural": "Clous",
     "gender": "der",
+    "pos": "noun",
     "meaning": "the key point, the highlight",
     "examples": ["Der Clou an der Sache ist, dass niemand es bemerkt hat."],
     "set": "November"
@@ -43,6 +48,7 @@
     "word": "unterhaltsam",
     "plural": "",
     "gender": "",
+    "pos": "adjective",
     "meaning": "entertaining",
     "examples": ["Der Film war sehr unterhaltsam."],
     "set": "November"
@@ -51,6 +57,7 @@
     "word": "suhlen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to wallow",
     "examples": ["Die Schweine suhlen sich im Schlamm."],
     "set": "November"
@@ -59,6 +66,7 @@
     "word": "Mehrkornbrot",
     "plural": "Mehrkornbrote",
     "gender": "das",
+    "pos": "noun",
     "meaning": "multigrain bread",
     "examples": ["dahergelaufenes Mehrkornbrot mit seinen zehn Getreidesorten"],
     "set": "November"
@@ -67,6 +75,7 @@
     "word": "Mehl",
     "plural": "Mehle",
     "gender": "das",
+    "pos": "noun",
     "meaning": "flour",
     "examples": ["Ich brauche Mehl für den Kuchen."],
     "set": "November"
@@ -75,6 +84,7 @@
     "word": "Himmelsrichtung",
     "plural": "Himmelsrichtungen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "cardinal direction",
     "examples": ["Welche Himmelsrichtung zeigt der Kompass an?"],
     "set": "November"
@@ -83,6 +93,7 @@
     "word": "Ausbau",
     "plural": "Ausbauten",
     "gender": "der",
+    "pos": "noun",
     "meaning": "expansion",
     "examples": ["Der Ausbau der Infrastruktur geht voran."],
     "set": "November"
@@ -91,6 +102,7 @@
     "word": "ausgleichen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to balance, to make up for",
     "examples": ["Wir versuchen, den Rückstand gegenüber dem Westen auszugleichen."],
     "set": "November"
@@ -99,6 +111,7 @@
     "word": "wahrnehmen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to perceive",
     "examples": ["Er kann feine Unterschiede kaum wahrnehmen."],
     "set": "November"
@@ -107,6 +120,7 @@
     "word": "Verkehrsmittel",
     "plural": "Verkehrsmittel",
     "gender": "das",
+    "pos": "noun",
     "meaning": "means of transport",
     "examples": ["Öffentliche Verkehrsmittel sind oft zuverlässig."],
     "set": "November"
@@ -115,6 +129,7 @@
     "word": "Einrichtung",
     "plural": "Einrichtungen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "facility",
     "examples": ["Die städtischen Einrichtungen werden modernisiert."],
     "set": "November"
@@ -123,6 +138,7 @@
     "word": "benachteiligen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to disadvantage",
     "examples": ["Das neue Gesetz benachteiligt kleinere Firmen."],
     "set": "November"
@@ -131,6 +147,7 @@
     "word": "beschweren",
     "plural": "",
     "gender": "",
+    "pos": "reflexive verb",
     "meaning": "to complain (reflexive)",
     "examples": ["Er beschwert sich über den Lärm."],
     "set": "November"
@@ -139,6 +156,7 @@
     "word": "unzureichend",
     "plural": "",
     "gender": "",
+    "pos": "adjective",
     "meaning": "insufficient",
     "examples": ["Die Informationen waren unzureichend."],
     "set": "November"
@@ -147,6 +165,7 @@
     "word": "vorläufig",
     "plural": "",
     "gender": "",
+    "pos": "adjective",
     "meaning": "provisional",
     "examples": ["Das ist nur eine vorläufige Entscheidung."],
     "set": "November"
@@ -155,6 +174,7 @@
     "word": "Gehalt",
     "plural": "Gehälter",
     "gender": "das",
+    "pos": "noun",
     "meaning": "salary",
     "examples": ["Er verhandelt sein Gehalt jedes Jahr neu."],
     "set": "November"
@@ -163,6 +183,7 @@
     "word": "Auflage",
     "plural": "Auflagen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "conditions, restrictions",
     "examples": ["Die Auflagen für das Projekt sind streng."],
     "set": "November"
@@ -171,6 +192,7 @@
     "word": "ermitteln",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to investigate",
     "examples": ["Die Polizei ermittelt in dem Fall."],
     "set": "November"
@@ -179,7 +201,8 @@
     "word": "schunkeln",
     "plural": "",
     "gender": "",
-    "meaning": "to sway in rhythm",
+    "pos": "verb",
+    "meaning": "to sway (in rhythm)",
     "examples": ["Auf dem Fest schunkelten alle zur Musik."],
     "set": "November"
   },
@@ -187,6 +210,7 @@
     "word": "Dreigestirn",
     "plural": "Dreigestirne",
     "gender": "das",
+    "pos": "noun",
     "meaning": "triumvirate",
     "examples": ["Das politische Dreigestirn traf eine Entscheidung."],
     "set": "November"
@@ -195,6 +219,7 @@
     "word": "Gelände",
     "plural": "Gelände",
     "gender": "das",
+    "pos": "noun",
     "meaning": "compound, site",
     "examples": ["Das Gelände gehört der Stadt."],
     "set": "November"
@@ -203,6 +228,7 @@
     "word": "Tagung",
     "plural": "Tagungen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "conference",
     "examples": ["Die Tagung findet nächste Woche statt."],
     "set": "November"
@@ -211,6 +237,7 @@
     "word": "Kundgebung",
     "plural": "Kundgebungen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "rally",
     "examples": ["Die Kundgebung zog viele Menschen an."],
     "set": "November"
@@ -219,6 +246,7 @@
     "word": "Insasse",
     "plural": "Insassen",
     "gender": "der",
+    "pos": "noun",
     "meaning": "occupant, passenger, inmate",
     "examples": ["Der Insasse wurde verletzt."],
     "set": "November"
@@ -227,6 +255,7 @@
     "word": "Urkunde",
     "plural": "Urkunden",
     "gender": "die",
+    "pos": "noun",
     "meaning": "certificate",
     "examples": ["Er erhielt eine Urkunde für seine Leistungen."],
     "set": "November"
@@ -235,6 +264,7 @@
     "word": "genehmigen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to approve, authorize",
     "examples": ["Die Behörde genehmigt den Antrag."],
     "set": "November"
@@ -243,6 +273,7 @@
     "word": "Klage",
     "plural": "Klagen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "lawsuit",
     "examples": ["Die Klage wurde eingereicht."],
     "set": "November"
@@ -251,6 +282,7 @@
     "word": "verklagen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to sue",
     "examples": ["Er will die Firma verklagen."],
     "set": "November"
@@ -259,6 +291,7 @@
     "word": "Rechtsanwalt",
     "plural": "Rechtsanwälte",
     "gender": "der",
+    "pos": "noun",
     "meaning": "lawyer",
     "examples": ["Der Rechtsanwalt vertritt den Mandanten vor Gericht."],
     "set": "November"
@@ -267,6 +300,7 @@
     "word": "zurückweisen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to reject",
     "examples": ["Er weist den Vorschlag zurück."],
     "set": "November"
@@ -275,6 +309,7 @@
     "word": "Hinrichtung",
     "plural": "Hinrichtungen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "execution",
     "examples": ["Die Hinrichtung fand im Morgengrauen statt."],
     "set": "November"
@@ -283,7 +318,8 @@
     "word": "geständig",
     "plural": "",
     "gender": "",
-    "meaning": "confessing (adj.)",
+    "pos": "adjective (participle)",
+    "meaning": "confessing",
     "examples": ["Der geständige Mörder legte ein umfassendes Geständnis ab."],
     "set": "November"
   },
@@ -291,6 +327,7 @@
     "word": "geistig beeinträchtigt",
     "plural": "",
     "gender": "",
+    "pos": "adjective phrase",
     "meaning": "mentally impaired",
     "examples": ["Der Patient ist geistig beeinträchtigt."],
     "set": "November"
@@ -299,6 +336,7 @@
     "word": "beeinträchtigen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to impair, to compromise",
     "examples": ["Lärm kann die Konzentration beeinträchtigen."],
     "set": "November"
@@ -307,6 +345,7 @@
     "word": "Schwangerschaft",
     "plural": "Schwangerschaften",
     "gender": "die",
+    "pos": "noun",
     "meaning": "pregnancy",
     "examples": ["Die Schwangerschaft verlief ohne Komplikationen."],
     "set": "November"
@@ -315,6 +354,7 @@
     "word": "ausgehen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to take as one's starting point",
     "examples": ["Wir gehen davon aus, dass er kommt."],
     "set": "November"
@@ -323,6 +363,7 @@
     "word": "Darm",
     "plural": "Därme",
     "gender": "der",
+    "pos": "noun",
     "meaning": "intestine",
     "examples": ["Der Darm spielt eine wichtige Rolle bei der Verdauung."],
     "set": "November"
@@ -331,6 +372,7 @@
     "word": "jucken",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to itch",
     "examples": ["Mein Arm juckt seit gestern."],
     "set": "November"
@@ -339,6 +381,7 @@
     "word": "verdrängen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to suppress, displace",
     "examples": ["Alte Gewohnheiten lassen sich schwer verdrängen."],
     "set": "November"
@@ -347,6 +390,7 @@
     "word": "Ballaststoff",
     "plural": "Ballaststoffe",
     "gender": "der",
+    "pos": "noun",
     "meaning": "dietary fiber",
     "examples": ["Ballaststoffe sind wichtig für die Verdauung."],
     "set": "November"
@@ -355,6 +399,7 @@
     "word": "setzen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to bet on; to focus on",
     "examples": ["Er setzt auf Qualität."],
     "set": "November"
@@ -363,6 +408,7 @@
     "word": "billigen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to approve, condone",
     "examples": ["Der Ausschuss billigte den Vorschlag."],
     "set": "November"
@@ -371,6 +417,7 @@
     "word": "Ertrag",
     "plural": "Erträge",
     "gender": "der",
+    "pos": "noun",
     "meaning": "yield, harvest",
     "examples": ["Der Ertrag war dieses Jahr besonders hoch."],
     "set": "November"
@@ -379,6 +426,7 @@
     "word": "Kunstdünger",
     "plural": "Kunstdünger",
     "gender": "der",
+    "pos": "noun",
     "meaning": "fertilizer",
     "examples": ["Der Kunstdünger verbessert den Boden."],
     "set": "November"
@@ -387,6 +435,7 @@
     "word": "aufwendig",
     "plural": "",
     "gender": "",
+    "pos": "adjective",
     "meaning": "elaborate, lavish",
     "examples": ["Die Produktion von Matcha ist sehr aufwendig."],
     "set": "November"
@@ -395,6 +444,7 @@
     "word": "Liegenschaft",
     "plural": "Liegenschaften",
     "gender": "die",
+    "pos": "noun",
     "meaning": "property, real estate",
     "examples": ["Die Liegenschaften wurden verkauft."],
     "set": "November"
@@ -403,6 +453,7 @@
     "word": "vermeintlich",
     "plural": "",
     "gender": "",
+    "pos": "adjective",
     "meaning": "alleged",
     "examples": ["Der vermeintliche Täter war unschuldig."],
     "set": "November"
@@ -411,6 +462,7 @@
     "word": "Luftfahrtmesse",
     "plural": "Luftfahrtmessen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "aviation trade fair",
     "examples": ["Die Luftfahrtmesse findet dieses Wochenende statt."],
     "set": "November"
@@ -419,6 +471,7 @@
     "word": "sich belaufen",
     "plural": "",
     "gender": "",
+    "pos": "reflexive verb",
     "meaning": "to amount to",
     "examples": ["Die Kosten belaufen sich auf 300 Euro."],
     "set": "November"
@@ -427,6 +480,7 @@
     "word": "Mittelstreckenflugzeug",
     "plural": "Mittelstreckenflugzeuge",
     "gender": "das",
+    "pos": "noun",
     "meaning": "medium-range aircraft",
     "examples": ["Mittelstreckenflugzeuge werden häufig eingesetzt."],
     "set": "November"
@@ -435,6 +489,7 @@
     "word": "langfristig",
     "plural": "",
     "gender": "",
+    "pos": "adverb/adjective",
     "meaning": "long-term",
     "examples": ["Wir planen langfristig."],
     "set": "November"
@@ -443,6 +498,7 @@
     "word": "versteigern",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to auction",
     "examples": ["Das Gemälde wurde versteigert."],
     "set": "November"
@@ -451,6 +507,7 @@
     "word": "Auszeichnung",
     "plural": "Auszeichnungen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "award",
     "examples": ["Sie vergaben eine Auszeichnung an ihn."],
     "set": "November"
@@ -459,6 +516,7 @@
     "word": "Sattelzug",
     "plural": "Sattelzüge",
     "gender": "der",
+    "pos": "noun",
     "meaning": "tractor trailer",
     "examples": ["Der Sattelzug blockierte die Straße."],
     "set": "November"
@@ -467,6 +525,7 @@
     "word": "Netzschalter",
     "plural": "Netzschalter",
     "gender": "der",
+    "pos": "noun",
     "meaning": "power switch",
     "examples": ["Der Netzschalter befindet sich hinten am Gerät."],
     "set": "November"
@@ -475,6 +534,7 @@
     "word": "Scharnier",
     "plural": "Scharniere",
     "gender": "das",
+    "pos": "noun",
     "meaning": "hinge",
     "examples": ["Das Scharnier der Tür quietscht."],
     "set": "November"
@@ -483,6 +543,7 @@
     "word": "Bügel",
     "plural": "Bügel",
     "gender": "der",
+    "pos": "noun",
     "meaning": "clothes hanger; arm of glasses",
     "examples": ["Der Bügel der Brille ist verbogen."],
     "set": "November"
@@ -491,6 +552,7 @@
     "word": "beschleunigen",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to accelerate",
     "examples": ["Das Auto beschleunigt schnell."],
     "set": "November"
@@ -499,6 +561,7 @@
     "word": "Loch",
     "plural": "Löcher",
     "gender": "das",
+    "pos": "noun",
     "meaning": "hole",
     "examples": ["Das Loch im Boden ist gefährlich."],
     "set": "November"
@@ -507,15 +570,16 @@
     "word": "Schwarzes Loch",
     "plural": "Schwarze Löcher",
     "gender": "das",
+    "pos": "noun (compound)",
     "meaning": "black hole",
     "examples": ["Ein Schwarzes Loch verschlingt alles in seiner Nähe."],
     "set": "November"
   },
-
   {
     "word": "Gericht",
     "plural": "Gerichte",
     "gender": "das",
+    "pos": "noun",
     "meaning": "dish, prepared meal",
     "examples": ["Das Gericht scheint ein Schüssel mit Suppe oder Eintopf zu sein."],
     "set": "November"
@@ -524,6 +588,7 @@
     "word": "Schüssel",
     "plural": "Schüsseln",
     "gender": "die",
+    "pos": "noun",
     "meaning": "bowl",
     "examples": ["Das Gericht scheint ein Schüssel mit Suppe oder Eintopf zu sein."],
     "set": "November"
@@ -532,6 +597,7 @@
     "word": "Suppe",
     "plural": "Suppen",
     "gender": "die",
+    "pos": "noun",
     "meaning": "soup",
     "examples": ["Das Gericht scheint ein Schüssel mit Suppe oder Eintopf zu sein."],
     "set": "November"
@@ -540,33 +606,34 @@
     "word": "Eintopf",
     "plural": "Eintöpfe",
     "gender": "der",
+    "pos": "noun",
     "meaning": "stew",
     "examples": ["Das Gericht scheint ein Schüssel mit Suppe oder Eintopf zu sein."],
     "set": "November"
   },
-
   {
     "word": "tätig",
     "plural": "",
     "gender": "",
+    "pos": "adjective",
     "meaning": "employed; active (professionally)",
     "examples": ["Ist er noch im Unternehmen tätig?"],
     "set": "November"
   },
-
   {
     "word": "erwarten",
     "plural": "",
     "gender": "",
+    "pos": "verb",
     "meaning": "to expect",
     "examples": ["Ich verspreche mir viel von dieser Entscheidung."],
     "set": "November"
   },
-
   {
     "word": "Wachstum",
     "plural": "Wachstums",
     "gender": "das",
+    "pos": "noun (uncountable)",
     "meaning": "growth",
     "examples": ["Nachhaltiges Wachstum ist wichtig für die Zukunft."],
     "set": "November"
