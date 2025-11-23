@@ -183,9 +183,18 @@ webrtc_ctx = webrtc_streamer(
 
 @st.cache_resource
 def get_speech_client():
-    key_dict = json.loads(st.secrets["google"]["credentials"])
+    # Streamlit may already parse the JSON into a dict
+    key_data = st.secrets["google"]["credentials"]
+
+    # If it's a string, parse it; if it's already a dict, use directly
+    if isinstance(key_data, str):
+        key_dict = json.loads(key_data)
+    else:
+        key_dict = key_data
+
     credentials = service_account.Credentials.from_service_account_info(key_dict)
     return speech.SpeechClient(credentials=credentials)
+
 
 client = get_speech_client()
 
