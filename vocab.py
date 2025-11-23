@@ -15,7 +15,7 @@ st.set_page_config(page_title="German Vocab Trainer", page_icon="🎤")
 # ============================================================
 
 @st.cache_data
-def load_all_vocab(folder="vocab"):
+def load_all_vocab(folder="german_vocab"):
     vocab = []
     files = [f for f in os.listdir(folder) if f.endswith(".json")]
 
