@@ -152,10 +152,13 @@ Pronounce:
 class AudioProcessor(AudioProcessorBase):
     def __init__(self):
         self.frames = []
+        self.count = 0
 
     def recv_audio_frame(self, frame):
+        self.count += 1
         self.frames.append(frame)
         return frame
+
 
 
 st.write("Press **Start**, then speak, then press **Stop**.")
@@ -167,6 +170,12 @@ webrtc_ctx = webrtc_streamer(
     media_stream_constraints={"audio": True, "video": False},
     audio_processor_factory=AudioProcessor,    # <-- FIXED
 )
+
+# === DEBUG: Check if audio frames are coming in ===
+if webrtc_ctx and webrtc_ctx.state.playing:
+    st.write(f"🎧 Frames received (live): {webrtc_ctx.audio_processor.count}")
+else:
+    st.write("⚠️ WebRTC not playing yet")
 
 
 # ============================================================
@@ -203,21 +212,35 @@ def check_match(asr_text, singular, plural):
 # ============================================================
 
 if st.button("Submit"):
-    if not webrtc_ctx or not webrtc_ctx.audio_receiver:
-        st.warning("No audio captured. Did you press Start and Stop?")
+
+    # --- DEBUG: check processor and frames ---
+    if not webrtc_ctx:
+        st.error("❌ webrtc_ctx is None (WebRTC failed to initialize)")
         st.stop()
 
-    audio_frames = webrtc_ctx.audio_receiver.get_frames(timeout=5)
+    if not hasattr(webrtc_ctx, "audio_processor") or webrtc_ctx.audio_processor is None:
+        st.error("❌ audio_processor missing")
+        st.stop()
+
+    st.write(f"Frames in processor: {webrtc_ctx.audio_processor.count}")
+
+    audio_frames = webrtc_ctx.audio_processor.frames
 
     if not audio_frames:
-        st.warning("No audio captured.")
+        st.error("❌ No frames recorded. Did you press Stop?")
         st.stop()
 
-    # Combine all frames into a single byte stream
+    # --- Assemble bytes from all frames ---
     raw_bytes = b"".join(
         frame.to_ndarray().astype(np.int16).tobytes()
         for frame in audio_frames
     )
+
+    st.write(f"Raw audio bytes length: {len(raw_bytes)}")
+
+    if len(raw_bytes) < 3000:
+        st.error("❌ Audio too short — try speaking for 1–2 seconds.")
+        st.stop()
 
     st.write("⏳ Transcribing...")
     text = transcribe_google(raw_bytes)
@@ -247,6 +270,7 @@ if st.button("Submit"):
 ### Examples:
 {entry['examples'] if entry['examples'] else '_None provided_'}
 """)
+
 
     if st.button("Next word"):
         pick_new_word()
