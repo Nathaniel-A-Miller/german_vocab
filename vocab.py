@@ -183,8 +183,6 @@ webrtc_ctx = webrtc_streamer(
 
 @st.cache_resource
 def get_speech_client():
-    st.write("SECRETS RAW STRING:")
-    st.write(repr(st.secrets["google"]["credentials"]))
     key_dict = json.loads(st.secrets["google"]["credentials"])
     credentials = service_account.Credentials.from_service_account_info(key_dict)
     return speech.SpeechClient(credentials=credentials)
