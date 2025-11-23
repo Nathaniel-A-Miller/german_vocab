@@ -3,8 +3,8 @@ import json
 import random
 import wave
 import tempfile
-from google.oauth2 import service_account
 from google.cloud import speech_v1p1beta1 as speech
+from google.oauth2 import service_account
 
 st.set_page_config(page_title="German Vocab Trainer", page_icon="🎤")
 
@@ -22,7 +22,7 @@ vocab_all = load_vocab()
 
 
 # ============================================================
-# Organize Sets
+# Get available sets
 # ============================================================
 
 @st.cache_data
@@ -38,7 +38,7 @@ sets_available = get_sets(vocab_all)
 
 @st.cache_resource
 def get_client():
-    creds = st.secrets["google"]["credentials"]  # nested TOML table
+    creds = st.secrets["google"]["credentials"]  # nested dict
     credentials = service_account.Credentials.from_service_account_info(creds)
     return speech.SpeechClient(credentials=credentials)
 
@@ -53,8 +53,8 @@ def transcribe_wav_file(path, sample_rate, channels):
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=sample_rate,
         language_code="de-DE",
+        sample_rate_hertz=sample_rate,
         audio_channel_count=channels,
     )
 
@@ -66,7 +66,60 @@ def transcribe_wav_file(path, sample_rate, channels):
 
 
 # ============================================================
-# Session State Initialization
+# POS-Aware Matching Logic
+# ============================================================
+
+def check_answer(entry, transcript):
+    """Return True if the ASR transcript contains the expected German word(s)."""
+
+    t = transcript.lower().strip()
+    pos = entry["pos"]
+    word = entry["word"].lower().strip()
+    gender = entry["gender"].lower().strip()
+    plural = entry["plural"].lower().strip()
+
+    # ---------------------------------------
+    # VERBS / REFLEXIVE VERBS
+    # ---------------------------------------
+    if pos in ["verb", "reflexive verb"]:
+        return word in t
+
+    # ---------------------------------------
+    # ADJECTIVES / ADVERBS / PARTICIPLES
+    # ---------------------------------------
+    if pos.startswith("adjective") or pos == "adverb":
+        return word in t
+
+    # ---------------------------------------
+    # NON-NOUNS fallback
+    # ---------------------------------------
+    if pos not in ["noun", "noun (compound)", "noun (uncountable)"]:
+        return word in t
+
+    # ---------------------------------------
+    # NOUNS – must check singular + plural
+    # ---------------------------------------
+    singular_form = f"{gender} {word}".strip()
+
+    singular_ok = (singular_form in t) or (word in t)
+
+    # plural may be optional (e.g. uncountable nouns)
+    if pos == "noun (uncountable)" or plural == "":
+        return singular_ok
+
+    plural_variants = {plural}
+    if plural.endswith("e"):
+        plural_variants.add(plural[:-1])
+    if plural.endswith("en"):
+        plural_variants.add(plural[:-2])
+
+    plural_ok = any(pv in t for pv in plural_variants)
+
+    return singular_ok and plural_ok
+
+
+# ============================================================
+# Initialize Session State
 # ============================================================
 
 if "selected_set" not in st.session_state:
@@ -91,17 +144,18 @@ init_progress(st.session_state.selected_set)
 
 
 # ============================================================
-# Sidebar Controls
+# Sidebar
 # ============================================================
 
 st.sidebar.header("Settings")
 
+# Select set
 set_choice = st.sidebar.selectbox("Select vocabulary set", sets_available)
-
 if set_choice != st.session_state.selected_set:
     st.session_state.selected_set = set_choice
     init_progress(set_choice)
 
+# Study or Review Mistakes
 mode_choice = st.sidebar.selectbox("Mode", ["Study", "Review Mistakes"])
 st.session_state.mode = mode_choice
 
@@ -122,78 +176,83 @@ if st.session_state.mode == "Review Mistakes":
 
 
 # ============================================================
-# Select Current Word
+# Filter and Pick Word
 # ============================================================
 
-filtered_vocab = [v for v in vocab_all if v["set"] == st.session_state.selected_set]
+filtered = [v for v in vocab_all if v["set"] == st.session_state.selected_set]
 
 if st.session_state.mode == "Review Mistakes":
-    filtered_vocab = progress["mistakes"][:]
+    filtered = progress["mistakes"][:]
 
 def pick_new_word():
     if st.session_state.mode == "Study":
-        remaining = [v for v in filtered_vocab if v["word"] not in progress["reviewed"]]
+        remaining = [
+            v for v in filtered
+            if v["word"] not in progress["reviewed"]
+        ]
         st.session_state.current = random.choice(remaining) if remaining else None
     else:
-        st.session_state.current = random.choice(filtered_vocab) if filtered_vocab else None
+        st.session_state.current = random.choice(filtered) if filtered else None
 
 if "current" not in st.session_state:
     pick_new_word()
 
 entry = st.session_state.current
 
-st.title("🎤 German Pronunciation Trainer")
+st.title("🎤 German Vocab Trainer")
 
 if entry is None:
-    msg = "You have reviewed all items! 🎉" if st.session_state.mode == "Study" else "No more mistakes! 🎉"
+    msg = (
+        "You're done with this set! 🎉"
+        if st.session_state.mode == "Study"
+        else "No mistakes left! 🎉"
+    )
     st.success(msg)
     st.stop()
 
 
 # ============================================================
-# Display English Meaning Only
+# Show ONLY the English
 # ============================================================
-
-meaning = entry["meaning"]
-g_singular = f"{entry['gender']} {entry['word']}".lower()
-g_plural = entry["plural"].lower()
 
 st.markdown(f"""
 ## Meaning:
-**{meaning}**
+**{entry['meaning']}**
 
-Say aloud:
-**{entry['gender']} {entry['word']} — {entry['plural']}**
+🎙️ Say the correct German word:
+
+- If it's a noun → say **article + singular**, then plural  
+- If it's a verb → say the infinitive  
+- If it's an adjective or adverb → say the lemma  
 """)
 
-
 # ============================================================
-# Recording (HTML5)
+# Audio Recorder (HTML5 file input)
 # ============================================================
 
-audio_data = st.audio_input("Press to record your German pronunciation")
+audio_file = st.audio_input("Press to record your pronunciation")
 
-if audio_data is not None:
+if audio_file is not None:
 
-    # Save to temp WAV
+    # Save to temp WAV file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
-        tmp.write(audio_data.read())
-        tmp_path = tmp.name
+        tmp.write(audio_file.read())
+        audio_path = tmp.name
 
-    # Read WAV metadata
-    with wave.open(tmp_path, "rb") as wf:
+    # Read metadata
+    with wave.open(audio_path, "rb") as wf:
         channels = wf.getnchannels()
         sample_rate = wf.getframerate()
 
-    # Auto-transcribe
     st.write("⏳ Transcribing…")
-    transcript = transcribe_wav_file(tmp_path, sample_rate, channels)
+    transcript = transcribe_wav_file(audio_path, sample_rate, channels)
 
     st.markdown(f"### You said:\n**{transcript}**")
 
-    # Check correctness
-    correct = g_singular in transcript and g_plural in transcript
+    # Evaluate correctness
+    correct = check_answer(entry, transcript)
 
+    # Update progress
     progress["reviewed"].add(entry["word"])
 
     if correct:
@@ -207,17 +266,18 @@ if audio_data is not None:
         if entry not in progress["mistakes"]:
             progress["mistakes"].append(entry)
 
-    # Reveal correct forms and example sentence
-    examples = entry["examples"] if entry["examples"] else "_None provided_"
+    # Reveal correct answers
     st.markdown(f"""
-### Correct forms:
-- **{entry['gender']} {entry['word']}**
-- **{entry['plural']}**
+### Correct German:
+- **Word:** {entry['word']}
+- **POS:** {entry['pos']}
+- **Gender:** {entry['gender'] or '—'}
+- **Plural:** {entry['plural'] or '—'}
 
 ### Example:
-{examples}
+{entry['examples'][0] if entry['examples'] else '_None provided_'}
 """)
 
-    if st.button("Next word"):
+    if st.button("Next"):
         pick_new_word()
         st.rerun()
