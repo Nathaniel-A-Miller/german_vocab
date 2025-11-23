@@ -5,10 +5,12 @@ import tempfile
 from google.oauth2 import service_account
 from google.cloud import speech_v1p1beta1 as speech
 
-st.title("🎤 HTML5 Microphone Test (No WebRTC, No Extra Dependencies)")
+st.title("🎤 HTML Microphone ASR Test (No WebRTC)")
 
 
-# ========= Google ASR client =========
+# ============================================================
+# Google Speech Client
+# ============================================================
 
 @st.cache_resource
 def get_client():
@@ -19,19 +21,26 @@ def get_client():
 client = get_client()
 
 
-# ========= Microphone upload =========
+# ============================================================
+# Record audio
+# ============================================================
 
 uploaded = st.audio_input("Press to record")
 
 if uploaded is not None:
     st.success("Audio recorded!")
 
-    # save uploaded audio to a temp file
+    # ------------------------------------------------------------
+    # Save recording to temp file
+    # ------------------------------------------------------------
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
         tmp.write(uploaded.read())
-        tmp_path = tmp.name
+        tmp_path = tmp.name   # <--- THIS DEFINES tmp_path
+    st.write(f"Temp WAV saved to: {tmp_path}")
 
-    # ========= Read WAV file using Python wave module =========
+    # ------------------------------------------------------------
+    # Read WAV metadata WITHOUT discarding header
+    # ------------------------------------------------------------
     with wave.open(tmp_path, "rb") as wf:
         num_channels = wf.getnchannels()
         sample_width = wf.getsampwidth()
@@ -40,34 +49,30 @@ if uploaded is not None:
         pcm_bytes = wf.readframes(num_frames)
 
     st.write(f"Channels: {num_channels}")
-    st.write(f"Sample width (bytes): {sample_width}")
+    st.write(f"Sample width: {sample_width} bytes")
     st.write(f"Sample rate: {sample_rate}")
-    st.write(f"PCM bytes length: {len(pcm_bytes)}")
+    st.write(f"PCM data length: {len(pcm_bytes)}")
 
-    # Google expects LINEAR16 → if sample width != 2, we convert
+    # ------------------------------------------------------------
+    # Read the FULL WAV file including header
+    # ------------------------------------------------------------
+    with open(tmp_path, "rb") as f:
+        wav_bytes = f.read()
+    st.write(f"Total WAV bytes sent to Google: {len(wav_bytes)}")
 
-    if sample_width != 2:
-        st.error("This WAV file is not 16-bit PCM. Try recording again.")
-        st.stop()
-
-    # ========= Send to Google Speech-to-Text =========
-
+    # ------------------------------------------------------------
+    # Google ASR
+    # ------------------------------------------------------------
     st.write("⏳ Transcribing…")
 
-# Read the full WAV file again (including header)
-with open(tmp_path, "rb") as f:
-    wav_bytes = f.read()
-
     audio = speech.RecognitionAudio(content=wav_bytes)
-    
+
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=sample_rate,
         language_code="de-DE",
-        audio_channel_count=1,
-        enable_automatic_punctuation=False,
+        audio_channel_count=num_channels,
     )
-
 
     response = client.recognize(config=config, audio=audio)
 
