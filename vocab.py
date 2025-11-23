@@ -84,6 +84,16 @@ def check_answer(entry, transcript):
     # VERBS (including reflexive)
     # -----------------------------
     if pos in ["verb", "reflexive verb"]:
+        # allow either exact phrase OR both words separately
+        if word in t:
+            return True
+    
+        # reflexive verbs: split into parts
+        parts = word.split()
+        if len(parts) > 1:
+            # require all components to appear as whole tokens
+            return all(p in tokens for p in parts)
+    
         return word in tokens
 
     # -----------------------------
