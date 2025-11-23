@@ -1,28 +1,60 @@
 import streamlit as st
-from streamlit_webrtc import webrtc_streamer, WebRtcMode, AudioProcessorBase
+import numpy as np
+from google.oauth2 import service_account
+from google.cloud import speech_v1p1beta1 as speech
+import tempfile
+import soundfile as sf
 
-st.title("WebRTC Minimal Mic Test")
+st.title("🎤 HTML5 Microphone Test (No WebRTC)")
 
-class AudioProcessor(AudioProcessorBase):
-    def __init__(self):
-        self.count = 0
 
-    def recv_audio_frame(self, frame):
-        self.count += 1
-        return frame
+# ========= Google ASR client =========
 
-webrtc_ctx = webrtc_streamer(
-    key="mic-test",
-    mode=WebRtcMode.SENDRECV,
-    audio_processor_factory=AudioProcessor,
-    async_transform=True,
-    rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
-    media_stream_constraints={"audio": True, "video": False},
-)
+@st.cache_resource
+def get_client():
+    creds = st.secrets["google"]["credentials"]
+    credentials = service_account.Credentials.from_service_account_info(creds)
+    return speech.SpeechClient(credentials=credentials)
 
-if webrtc_ctx:
-    st.write("State:", webrtc_ctx.state)
-    if webrtc_ctx.audio_processor:
-        st.write("Frames processed:", webrtc_ctx.audio_processor.count)
+client = get_client()
+
+
+# ========= Microphone upload =========
+
+uploaded = st.audio_input("Press to record")
+
+if uploaded is not None:
+    st.success("Audio recorded!")
+
+    # Save to temp WAV for reading
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+        tmp.write(uploaded.read())
+        tmp_path = tmp.name
+
+    # Read audio using soundfile
+    data, samplerate = sf.read(tmp_path)
+
+    # Convert to 16-bit PCM
+    pcm_data = (data * 32767).astype(np.int16).tobytes()
+
+    st.write(f"Sample rate: {samplerate}")
+    st.write(f"PCM length: {len(pcm_data)} bytes")
+
+    # ========= Google ASR =========
+
+    st.write("⏳ Transcribing…")
+
+    audio = speech.RecognitionAudio(content=pcm_data)
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=samplerate,
+        language_code="de-DE",
+    )
+
+    response = client.recognize(config=config, audio=audio)
+
+    if response.results:
+        transcript = response.results[0].alternatives[0].transcript
+        st.success(f"**Transcript:** {transcript}")
     else:
-        st.write("Audio processor not started yet.")
+        st.error("No transcription returned.")
