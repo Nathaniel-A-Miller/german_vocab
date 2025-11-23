@@ -54,13 +54,20 @@ if uploaded is not None:
 
     st.write("⏳ Transcribing…")
 
-    audio = speech.RecognitionAudio(content=pcm_bytes)
+# Read the full WAV file again (including header)
+with open(tmp_path, "rb") as f:
+    wav_bytes = f.read()
 
+    audio = speech.RecognitionAudio(content=wav_bytes)
+    
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=sample_rate,
         language_code="de-DE",
+        audio_channel_count=1,
+        enable_automatic_punctuation=False,
     )
+
 
     response = client.recognize(config=config, audio=audio)
 
