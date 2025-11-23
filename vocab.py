@@ -9,9 +9,8 @@ from google.oauth2 import service_account
 
 st.set_page_config(page_title="German Vocab Trainer", page_icon="🎤")
 
-
 # ============================================================
-# Load ALL vocab files from /vocab folder
+# Load ALL vocab files from /german_vocab folder
 # ============================================================
 
 @st.cache_data
@@ -24,14 +23,12 @@ def load_all_vocab(folder="german_vocab"):
         with open(path, "r", encoding="utf-8") as f:
             items = json.load(f)
             for item in items:
-                item["source_file"] = file   # Tag each entry with file
+                item["source_file"] = file
             vocab.extend(items)
 
     return vocab, files
 
-
 vocab_all, vocab_files = load_all_vocab()
-
 
 # ============================================================
 # Google Speech Client
@@ -44,7 +41,6 @@ def get_client():
     return speech.SpeechClient(credentials=credentials)
 
 client = get_client()
-
 
 def transcribe_wav_file(path, sample_rate, channels):
     with open(path, "rb") as f:
@@ -65,7 +61,6 @@ def transcribe_wav_file(path, sample_rate, channels):
         return response.results[0].alternatives[0].transcript.lower()
     return ""
 
-
 # ============================================================
 # POS / Whole-word / Reflexive matching logic
 # ============================================================
@@ -83,16 +78,11 @@ def check_answer(entry, transcript):
     # VERBS (including reflexive)
     # -----------------------------
     if pos in ["verb", "reflexive verb"]:
-
-        # If exact phrase appears
         if word in t:
             return True
-
-        # Split reflexive verbs
         parts = word.split()
         if len(parts) > 1:
             return all(p in tokens for p in parts)
-
         return word in tokens
 
     # -----------------------------
@@ -108,21 +98,18 @@ def check_answer(entry, transcript):
         return word in tokens
 
     # -----------------------------
-    # NOUNS — whole word matching
+    # NOUNS — strict matching
     # -----------------------------
     singular_form = f"{gender} {word}".strip()
 
     singular_ok = (singular_form in t) or (word in tokens)
 
-    # Uncountable nouns
     if plural == "":
         return singular_ok
 
-    # Require plural explicitly
     plural_ok = plural in tokens or plural in t.split()
 
     return singular_ok and plural_ok
-
 
 # ============================================================
 # Session State
@@ -137,7 +124,6 @@ if "mode" not in st.session_state:
 if "progress" not in st.session_state:
     st.session_state.progress = {}
 
-# Ensure progress entry exists
 if st.session_state.selected_file not in st.session_state.progress:
     st.session_state.progress[st.session_state.selected_file] = {
         "reviewed": set(),
@@ -148,6 +134,9 @@ if st.session_state.selected_file not in st.session_state.progress:
 
 progress = st.session_state.progress[st.session_state.selected_file]
 
+# Queue for Review Mistakes (finite cycle)
+if "review_queue" not in st.session_state:
+    st.session_state.review_queue = []
 
 # ============================================================
 # Sidebar
@@ -155,12 +144,11 @@ progress = st.session_state.progress[st.session_state.selected_file]
 
 st.sidebar.header("Vocabulary Source File")
 
-# ----- FILE SELECTOR -----
+# File selector
 file_choice = st.sidebar.selectbox("Choose vocab JSON file", vocab_files)
 
 if file_choice != st.session_state.selected_file:
     st.session_state.selected_file = file_choice
-    # Reset progress for this file if needed
     if file_choice not in st.session_state.progress:
         st.session_state.progress[file_choice] = {
             "reviewed": set(),
@@ -172,23 +160,23 @@ if file_choice != st.session_state.selected_file:
 
 filtered_vocab = [v for v in vocab_all if v["source_file"] == st.session_state.selected_file]
 
-
-# ----- STUDY MODE / REVIEW MODE -----
-# ----- STUDY MODE / REVIEW MODE -----
+# Mode selector
 mode_choice = st.sidebar.selectbox("Mode", ["Study", "Review Mistakes"])
 
-# If the user switched modes, handle it
+# Handle mode change
 if mode_choice != st.session_state.get("mode"):
     st.session_state.mode = mode_choice
 
-    # If switching into Review Mode with no mistakes, stop immediately
-    if mode_choice == "Review Mistakes" and not progress["mistakes"]:
-        st.success("No mistakes to review! 🎉")
-        st.stop()
+    if mode_choice == "Review Mistakes":
+        if not progress["mistakes"]:
+            st.success("No mistakes to review! 🎉")
+            st.stop()
 
-    # IMPORTANT: only call pick_new_word AFTER it's defined
-    # So we defer rerun until after we define it
+        # Build new finite review queue
+        st.session_state.review_queue = progress["mistakes"].copy()
+
     st.session_state._pending_mode_switch = True
+
 else:
     st.session_state.mode = mode_choice
 
@@ -205,8 +193,7 @@ st.sidebar.markdown(f"""
 """)
 
 if mode_choice == "Review Mistakes":
-    st.sidebar.markdown(f"### Mistakes left: **{len(progress['mistakes'])}**")
-
+    st.sidebar.markdown(f"### Mistakes left: **{len(st.session_state.review_queue)}**")
 
 # ============================================================
 # Select a word
@@ -217,16 +204,19 @@ def pick_new_word():
         remaining = [v for v in filtered_vocab if v["word"] not in progress["reviewed"]]
         st.session_state.current = random.choice(remaining) if remaining else None
     else:
-        st.session_state.current = (
-            random.choice(progress["mistakes"]) if progress["mistakes"] else None
-        )
+        # Review Mistakes: pop first item
+        if not st.session_state.review_queue:
+            st.session_state.current = None
+        else:
+            st.session_state.current = st.session_state.review_queue[0]
 
-# If a mode switch was pending, now we can safely update the word and rerun
+# Handle pending mode switch
 if st.session_state.get("_pending_mode_switch"):
     del st.session_state["_pending_mode_switch"]
     pick_new_word()
     st.rerun()
 
+# Initial pick
 if "current" not in st.session_state:
     pick_new_word()
 
@@ -241,9 +231,8 @@ if entry is None:
         st.success("No mistakes left! 🎉")
     st.stop()
 
-
 # ============================================================
-# PROMPT (English only)
+# Prompt (English only)
 # ============================================================
 
 st.markdown(f"""
@@ -256,7 +245,6 @@ st.markdown(f"""
 - **Reflexive verb:** say both parts  
 - **Adjective/Adverb:** say lemma  
 """)
-
 
 # ============================================================
 # Audio Input
@@ -272,7 +260,6 @@ if audio_input:
         tmp.write(audio_input.read())
         audio_path = tmp.name
 
-    # Extract audio metadata
     with wave.open(audio_path, "rb") as wf:
         channels = wf.getnchannels()
         sample_rate = wf.getframerate()
@@ -286,18 +273,39 @@ if audio_input:
     correct = check_answer(entry, transcript)
     first_time = entry["word"] not in progress["reviewed"]
 
+    # ===== Update progress =====
+
     if correct:
         st.success("Correct! 🎉")
+
+        # Study mode: standard update
         if first_time:
             progress["correct"] += 1
-            if entry in progress["mistakes"]:
-                progress["mistakes"].remove(entry)
+
+        # Review mode: remove from queue
+        if entry in st.session_state.review_queue:
+            st.session_state.review_queue.remove(entry)
+
+        # If in mistakes, remove
+        if entry in progress["mistakes"]:
+            progress["mistakes"].remove(entry)
+
     else:
         st.error("Not quite.")
+
         if first_time:
             progress["wrong"] += 1
-            if entry not in progress["mistakes"]:
-                progress["mistakes"].append(entry)
+
+        # Add to mistakes list if not already
+        if entry not in progress["mistakes"]:
+            progress["mistakes"].append(entry)
+
+        # Review mode: incorrect → move to back of queue
+        if st.session_state.mode == "Review Mistakes":
+            if entry in st.session_state.review_queue:
+                st.session_state.review_queue.append(
+                    st.session_state.review_queue.pop(0)
+                )
 
     progress["reviewed"].add(entry["word"])
 
