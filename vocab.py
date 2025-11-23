@@ -250,18 +250,24 @@ if audio_file is not None:
     correct = check_answer(entry, transcript)
 
     # Update progress
-    progress["reviewed"].add(entry["word"])
-
+    # Only count stats the FIRST time this word is reviewed
+    first_time = entry["word"] not in progress["reviewed"]
+    
     if correct:
         st.success("Correct! 🎉")
-        progress["correct"] += 1
-        if entry in progress["mistakes"]:
-            progress["mistakes"].remove(entry)
+        if first_time:
+            progress["correct"] += 1
+            if entry in progress["mistakes"]:
+                progress["mistakes"].remove(entry)
     else:
         st.error("Not quite.")
-        progress["wrong"] += 1
-        if entry not in progress["mistakes"]:
-            progress["mistakes"].append(entry)
+        if first_time:
+            progress["wrong"] += 1
+            if entry not in progress["mistakes"]:
+                progress["mistakes"].append(entry)
+    
+    # After counting, mark item as reviewed
+    progress["reviewed"].add(entry["word"])
 
     # Reveal correct answers
     st.markdown(f"""
