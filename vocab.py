@@ -107,13 +107,7 @@ def check_answer(entry, transcript):
     if pos == "noun (uncountable)" or plural == "":
         return singular_ok
 
-    plural_variants = {plural}
-    if plural.endswith("e"):
-        plural_variants.add(plural[:-1])
-    if plural.endswith("en"):
-        plural_variants.add(plural[:-2])
-
-    plural_ok = any(pv in t for pv in plural_variants)
+    plural_ok = plural in t
 
     return singular_ok and plural_ok
 
