@@ -175,7 +175,24 @@ filtered_vocab = [v for v in vocab_all if v["source_file"] == st.session_state.s
 
 # ----- STUDY MODE / REVIEW MODE -----
 mode_choice = st.sidebar.selectbox("Mode", ["Study", "Review Mistakes"])
+
+# If user changed mode, force rerun to pick new word
+if mode_choice != st.session_state.get("mode"):
+    st.session_state.mode = mode_choice
+    # If switching to Review Mistakes and list is empty → show message
+    if mode_choice == "Review Mistakes" and not progress["mistakes"]:
+        st.success("No mistakes to review! 🎉")
+        st.stop()
+    pick_new_word()
+    st.rerun()
+
+# If mode did NOT change, just update session state normally
 st.session_state.mode = mode_choice
+
+# Now add the empty-mistakes message for the normal flow
+if mode_choice == "Review Mistakes" and not progress["mistakes"]:
+    st.success("No mistakes to review! 🎉")
+    st.stop()
 
 # Progress display
 total_items = len(filtered_vocab)
