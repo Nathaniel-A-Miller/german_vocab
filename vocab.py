@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 import json
 import random
 import wave
@@ -10,26 +11,26 @@ st.set_page_config(page_title="German Vocab Trainer", page_icon="🎤")
 
 
 # ============================================================
-# Load Vocabulary
+# Load ALL vocab files from /vocab folder
 # ============================================================
 
 @st.cache_data
-def load_vocab(path="german_vocab.json"):
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+def load_all_vocab(folder="vocab"):
+    vocab = []
+    files = [f for f in os.listdir(folder) if f.endswith(".json")]
 
-vocab_all = load_vocab()
+    for file in files:
+        path = os.path.join(folder, file)
+        with open(path, "r", encoding="utf-8") as f:
+            items = json.load(f)
+            for item in items:
+                item["source_file"] = file   # Tag each entry with file
+            vocab.extend(items)
+
+    return vocab, files
 
 
-# ============================================================
-# Get Sets
-# ============================================================
-
-@st.cache_data
-def get_sets(vocab):
-    return sorted({entry["set"] for entry in vocab})
-
-sets_available = get_sets(vocab_all)
+vocab_all, vocab_files = load_all_vocab()
 
 
 # ============================================================
@@ -47,9 +48,9 @@ client = get_client()
 
 def transcribe_wav_file(path, sample_rate, channels):
     with open(path, "rb") as f:
-        wav_bytes = f.read()
+        audio_bytes = f.read()
 
-    audio = speech.RecognitionAudio(content=wav_bytes)
+    audio = speech.RecognitionAudio(content=audio_bytes)
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -66,12 +67,10 @@ def transcribe_wav_file(path, sample_rate, channels):
 
 
 # ============================================================
-# POS-Aware, Whole-Word Matching
+# POS / Whole-word / Reflexive matching logic
 # ============================================================
 
 def check_answer(entry, transcript):
-    """Return True if ASR transcript contains the expected forms."""
-
     t = transcript.lower().strip()
     tokens = t.split()
 
@@ -84,16 +83,16 @@ def check_answer(entry, transcript):
     # VERBS (including reflexive)
     # -----------------------------
     if pos in ["verb", "reflexive verb"]:
-        # allow either exact phrase OR both words separately
+
+        # If exact phrase appears
         if word in t:
             return True
-    
-        # reflexive verbs: split into parts
+
+        # Split reflexive verbs
         parts = word.split()
         if len(parts) > 1:
-            # require all components to appear as whole tokens
             return all(p in tokens for p in parts)
-    
+
         return word in tokens
 
     # -----------------------------
@@ -113,14 +112,13 @@ def check_answer(entry, transcript):
     # -----------------------------
     singular_form = f"{gender} {word}".strip()
 
-    # singular must appear as whole token or full phrase
     singular_ok = (singular_form in t) or (word in tokens)
 
-    # uncountable nouns have no plural requirement
-    if "uncountable" in pos or plural == "":
+    # Uncountable nouns
+    if plural == "":
         return singular_ok
 
-    # plural must appear EXACTLY
+    # Require plural explicitly
     plural_ok = plural in tokens or plural in t.split()
 
     return singular_ok and plural_ok
@@ -130,8 +128,8 @@ def check_answer(entry, transcript):
 # Session State
 # ============================================================
 
-if "selected_set" not in st.session_state:
-    st.session_state.selected_set = sets_available[0]
+if "selected_file" not in st.session_state:
+    st.session_state.selected_file = vocab_files[0]
 
 if "mode" not in st.session_state:
     st.session_state.mode = "Study"
@@ -139,43 +137,54 @@ if "mode" not in st.session_state:
 if "progress" not in st.session_state:
     st.session_state.progress = {}
 
+# Ensure progress entry exists
+if st.session_state.selected_file not in st.session_state.progress:
+    st.session_state.progress[st.session_state.selected_file] = {
+        "reviewed": set(),
+        "correct": 0,
+        "wrong": 0,
+        "mistakes": []
+    }
 
-def init_progress(set_name):
-    if set_name not in st.session_state.progress:
-        st.session_state.progress[set_name] = {
-            "reviewed": set(),
-            "correct": 0,
-            "wrong": 0,
-            "mistakes": []
-        }
-
-
-init_progress(st.session_state.selected_set)
-
-progress = st.session_state.progress[st.session_state.selected_set]
+progress = st.session_state.progress[st.session_state.selected_file]
 
 
 # ============================================================
 # Sidebar
 # ============================================================
 
-st.sidebar.header("Settings")
+st.sidebar.header("Vocabulary Source File")
 
-set_choice = st.sidebar.selectbox("Select vocabulary set", sets_available)
-if set_choice != st.session_state.selected_set:
-    st.session_state.selected_set = set_choice
-    init_progress(set_choice)
-    progress = st.session_state.progress[set_choice]
+# ----- FILE SELECTOR -----
+file_choice = st.sidebar.selectbox("Choose vocab JSON file", vocab_files)
 
+if file_choice != st.session_state.selected_file:
+    st.session_state.selected_file = file_choice
+    # Reset progress for this file if needed
+    if file_choice not in st.session_state.progress:
+        st.session_state.progress[file_choice] = {
+            "reviewed": set(),
+            "correct": 0,
+            "wrong": 0,
+            "mistakes": []
+        }
+    progress = st.session_state.progress[file_choice]
+
+filtered_vocab = [v for v in vocab_all if v["source_file"] == st.session_state.selected_file]
+
+
+# ----- STUDY MODE / REVIEW MODE -----
 mode_choice = st.sidebar.selectbox("Mode", ["Study", "Review Mistakes"])
 st.session_state.mode = mode_choice
 
-total_items = len([v for v in vocab_all if v["set"] == st.session_state.selected_set])
+# Progress display
+total_items = len(filtered_vocab)
+reviewed_count = len(progress["reviewed"])
 
 st.sidebar.markdown(f"""
 ### Progress
 - Total: **{total_items}**
-- Reviewed: **{len(progress['reviewed'])}**
+- Reviewed: **{reviewed_count}**
 - Correct: **{progress['correct']}**
 - Wrong: **{progress['wrong']}**
 """)
@@ -185,24 +194,17 @@ if mode_choice == "Review Mistakes":
 
 
 # ============================================================
-# Pick Word
+# Select a word
 # ============================================================
 
-filtered = [v for v in vocab_all if v["set"] == st.session_state.selected_set]
-
-if mode_choice == "Review Mistakes":
-    filtered = progress["mistakes"][:]
-
-
 def pick_new_word():
-    if mode_choice == "Study":
-        remaining = [
-            v for v in filtered
-            if v["word"] not in progress["reviewed"]
-        ]
+    if st.session_state.mode == "Study":
+        remaining = [v for v in filtered_vocab if v["word"] not in progress["reviewed"]]
         st.session_state.current = random.choice(remaining) if remaining else None
     else:
-        st.session_state.current = random.choice(filtered) if filtered else None
+        st.session_state.current = (
+            random.choice(progress["mistakes"]) if progress["mistakes"] else None
+        )
 
 
 if "current" not in st.session_state:
@@ -213,55 +215,55 @@ entry = st.session_state.current
 st.title("🎤 German Vocab Trainer")
 
 if entry is None:
-    msg = "You're done with this set! 🎉" if mode_choice == "Study" else "No mistakes left! 🎉"
-    st.success(msg)
+    if mode_choice == "Study":
+        st.success("You finished all items in this set! 🎉")
+    else:
+        st.success("No mistakes left! 🎉")
     st.stop()
 
 
 # ============================================================
-# Prompt
+# PROMPT (English only)
 # ============================================================
 
 st.markdown(f"""
 ## Meaning:
 **{entry['meaning']}**
 
-🎙️ Say the correct German word:
-
-- **Noun** → say article + singular, then plural  
-- **Verb** → say infinitive  
-- **Adjective/Adverb** → say lemma  
+🎙️ Say the correct German form:
+- **Noun:** say article + singular, then plural  
+- **Verb:** say infinitive  
+- **Reflexive verb:** say both parts  
+- **Adjective/Adverb:** say lemma  
 """)
 
 
 # ============================================================
-# Audio Input (reset per word)
+# Audio Input
 # ============================================================
 
-audio_file = st.audio_input(
+audio_input = st.audio_input(
     "Press to record your pronunciation",
     key=f"audio_{entry['word']}"
 )
 
-if audio_file is not None:
-
+if audio_input:
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
-        tmp.write(audio_file.read())
+        tmp.write(audio_input.read())
         audio_path = tmp.name
 
+    # Extract audio metadata
     with wave.open(audio_path, "rb") as wf:
         channels = wf.getnchannels()
         sample_rate = wf.getframerate()
 
-    st.write("⏳ Transcribing…")
+    st.write("⏳ Transcribing...")
+
     transcript = transcribe_wav_file(audio_path, sample_rate, channels)
 
     st.markdown(f"### You said:\n**{transcript}**")
 
-    # Determine correctness
     correct = check_answer(entry, transcript)
-
-    # Count only FIRST time we see this word
     first_time = entry["word"] not in progress["reviewed"]
 
     if correct:
@@ -277,19 +279,18 @@ if audio_file is not None:
             if entry not in progress["mistakes"]:
                 progress["mistakes"].append(entry)
 
-    # Mark word reviewed
     progress["reviewed"].add(entry["word"])
 
-    # Reveal
+    # Reveal correct answer
     st.markdown(f"""
 ### Correct German:
-- **Word:** {entry['word']}
-- **POS:** {entry['pos']}
-- **Gender:** {entry['gender'] or '—'}
-- **Plural:** {entry['plural'] or '—'}
+- **{entry['word']}**
+- POS: **{entry['pos']}**
+- Gender: **{entry['gender'] or "—"}**
+- Plural: **{entry['plural'] or "—"}**
 
 ### Example:
-{entry['examples'][0] if entry['examples'] else '_None provided_'}
+{entry['examples'][0] if entry['examples'] else "_None provided_"}
 """)
 
     if st.button("Next"):
