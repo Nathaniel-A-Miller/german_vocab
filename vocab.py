@@ -165,11 +165,20 @@ st.write("Press **Start**, then speak, then press **Stop**.")
 
 webrtc_ctx = webrtc_streamer(
     key="speech",
-    mode=WebRtcMode.SENDRECV,   # <-- FIXED
-    audio_receiver_size=256,
-    media_stream_constraints={"audio": True, "video": False},
-    audio_processor_factory=AudioProcessor,    # <-- FIXED
+    mode=WebRtcMode.SENDRECV,
+    audio_processor_factory=AudioProcessor,
+    async_transform=True,
+    rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+    audio_receiver_size=1024,
+    media_stream_constraints={
+        "audio": {
+            "echoCancellation": True,
+            "noiseSuppression": True,
+        },
+        "video": False
+    },
 )
+
 
 # === DEBUG: Check if audio frames are coming in ===
 if webrtc_ctx and webrtc_ctx.state.playing:
