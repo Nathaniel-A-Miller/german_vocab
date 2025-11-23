@@ -1,7 +1,6 @@
 import streamlit as st
 import random
 import json
-import io
 import numpy as np
 from google.cloud import speech_v1p1beta1 as speech
 from google.oauth2 import service_account
@@ -64,19 +63,17 @@ init_progress(st.session_state.selected_set)
 
 st.sidebar.header("Settings")
 
-# --- Select set ---
 set_choice = st.sidebar.selectbox("Select vocabulary set", sets_available)
 if set_choice != st.session_state.selected_set:
     st.session_state.selected_set = set_choice
     init_progress(set_choice)
 
-# --- Study mode or Review Mistakes ---
 mode_choice = st.sidebar.selectbox("Mode", ["Study", "Review Mistakes"])
 st.session_state.mode = mode_choice
 
 progress = st.session_state.progress[st.session_state.selected_set]
 
-# --- Progress display ---
+# Sidebar stats
 total_items = len([v for v in vocab_all if v["set"] == st.session_state.selected_set])
 reviewed_count = len(progress["reviewed"])
 correct_count = progress["correct"]
@@ -101,7 +98,7 @@ if st.session_state.mode == "Review Mistakes":
 filtered_vocab = [v for v in vocab_all if v["set"] == st.session_state.selected_set]
 
 if st.session_state.mode == "Review Mistakes":
-    filtered_vocab = progress["mistakes"][:]  # list copy
+    filtered_vocab = progress["mistakes"][:]  # copy
 
 
 # ============================================================
@@ -111,15 +108,9 @@ if st.session_state.mode == "Review Mistakes":
 def pick_new_word():
     if st.session_state.mode == "Study":
         remaining = [v for v in filtered_vocab if v["word"] not in progress["reviewed"]]
-        if not remaining:
-            st.session_state.current = None
-        else:
-            st.session_state.current = random.choice(remaining)
-    else:  # Review Mistakes
-        if not filtered_vocab:
-            st.session_state.current = None
-        else:
-            st.session_state.current = random.choice(filtered_vocab)
+        st.session_state.current = random.choice(remaining) if remaining else None
+    else:
+        st.session_state.current = random.choice(filtered_vocab) if filtered_vocab else None
 
 if "current" not in st.session_state:
     pick_new_word()
@@ -143,7 +134,6 @@ if entry is None:
 singular_phrase = f"{entry['gender']} {entry['word']}".lower()
 plural_form = entry['plural'].lower()
 
-# Display meaning
 st.markdown(f"""
 ### Meaning:
 **{entry['meaning']}**
@@ -156,7 +146,7 @@ Pronounce:
 
 
 # ============================================================
-# Audio Recorder
+# Audio Recorder — FIXED VERSION
 # ============================================================
 
 class AudioProcessor(AudioProcessorBase):
@@ -164,16 +154,18 @@ class AudioProcessor(AudioProcessorBase):
         self.frames = []
 
     def recv_audio_frame(self, frame):
-        self.frames.append(frame.to_ndarray())
+        self.frames.append(frame)
         return frame
 
-st.write("Press **Start** and speak.")
+
+st.write("Press **Start**, then speak, then press **Stop**.")
 
 webrtc_ctx = webrtc_streamer(
     key="speech",
-    mode=WebRtcMode.SENDONLY,
+    mode=WebRtcMode.SENDRECV,   # <-- FIXED
     audio_receiver_size=256,
     media_stream_constraints={"audio": True, "video": False},
+    audio_processor_factory=AudioProcessor,    # <-- FIXED
 )
 
 
@@ -183,18 +175,9 @@ webrtc_ctx = webrtc_streamer(
 
 @st.cache_resource
 def get_speech_client():
-    # Streamlit may already parse the JSON into a dict
-    key_data = st.secrets["google"]["credentials"]
-
-    # If it's a string, parse it; if it's already a dict, use directly
-    if isinstance(key_data, str):
-        key_dict = json.loads(key_data)
-    else:
-        key_dict = key_data
-
+    key_dict = st.secrets["google"]["credentials"]  # already a dict via TOML tables
     credentials = service_account.Credentials.from_service_account_info(key_dict)
     return speech.SpeechClient(credentials=credentials)
-
 
 client = get_speech_client()
 
@@ -216,21 +199,25 @@ def check_match(asr_text, singular, plural):
 
 
 # ============================================================
-# Submit recording
+# Submit audio — FIXED VERSION
 # ============================================================
 
 if st.button("Submit"):
-    if not (webrtc_ctx and webrtc_ctx.audio_receiver):
-        st.warning("No audio captured.")
+    if not webrtc_ctx or not webrtc_ctx.audio_receiver:
+        st.warning("No audio captured. Did you press Start and Stop?")
         st.stop()
 
     audio_frames = webrtc_ctx.audio_receiver.get_frames(timeout=5)
+
     if not audio_frames:
         st.warning("No audio captured.")
         st.stop()
 
-    audio_ndarray = audio_frames[0].to_ndarray().flatten()
-    raw_bytes = audio_ndarray.astype(np.int16).tobytes()
+    # Combine all frames into a single byte stream
+    raw_bytes = b"".join(
+        frame.to_ndarray().astype(np.int16).tobytes()
+        for frame in audio_frames
+    )
 
     st.write("⏳ Transcribing...")
     text = transcribe_google(raw_bytes)
@@ -239,26 +226,19 @@ if st.button("Submit"):
 
     correct = check_match(text, singular_phrase, plural_form)
 
-    # Update progress
     progress["reviewed"].add(entry["word"])
 
     if correct:
         st.success("Correct! 🎉")
         progress["correct"] += 1
-
-        # remove from mistakes if reviewing
         if entry in progress["mistakes"]:
             progress["mistakes"].remove(entry)
-
     else:
         st.error("Not quite.")
         progress["wrong"] += 1
-
-        # add to mistakes if not already present
         if entry not in progress["mistakes"]:
             progress["mistakes"].append(entry)
 
-    # Show correct forms & examples
     st.markdown(f"""
 ### Correct forms:
 - **{entry['gender']} {entry['word']}**
