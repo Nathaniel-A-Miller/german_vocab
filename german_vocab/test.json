@@ -1,1 +1,102 @@
+[
+    {
+    "word": "Einrichtung",
+    "plural": "Einrichtungen",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "facility",
+    "examples": ["Die städtischen Einrichtungen werden modernisiert."],
+    "set": "test"
+  },
+  {
+    "word": "Haus",
+    "plural": "Häuser",
+    "gender": "das",
+    "pos": "noun",
+    "meaning": "house",
+    "examples": ["Das Haus ist sehr alt."],
+    "set": "test"
+  },
+  {
+    "word": "Buch",
+    "plural": "Bücher",
+    "gender": "das",
+    "pos": "noun",
+    "meaning": "book",
+    "examples": ["Ich lese ein interessantes Buch."],
+    "set": "test"
+  },
+  {
+    "word": "Tisch",
+    "plural": "Tische",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "table",
+    "examples": ["Der Tisch steht im Wohnzimmer."],
+    "set": "test"
+  },
+  {
+    "word": "Stuhl",
+    "plural": "Stühle",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "chair",
+    "examples": ["Der Stuhl ist sehr bequem."],
+    "set": "test"
+  },
+  {
+    "word": "Stadt",
+    "plural": "Städte",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "city",
+    "examples": ["Die Stadt wächst jedes Jahr."],
+    "set": "test"
+  },
+  {
+    "word": "Auto",
+    "plural": "Autos",
+    "gender": "das",
+    "pos": "noun",
+    "meaning": "car",
+    "examples": ["Mein Auto braucht eine Reparatur."],
+    "set": "test"
+  },
+  {
+    "word": "Freund",
+    "plural": "Freunde",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "friend (male)",
+    "examples": ["Mein Freund hilft mir beim Umzug."],
+    "set": "test"
+  },
+  {
+    "word": "Zeit",
+    "plural": "Zeiten",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "time",
+    "examples": ["Ich habe heute keine Zeit."],
+    "set": "test"
+  },
+  {
+    "word": "Wasser",
+    "plural": "—",
+    "gender": "das",
+    "pos": "noun",
+    "meaning": "water",
+    "examples": ["Ich trinke viel Wasser."],
+    "set": "test"
+  },
+  {
+    "word": "Arbeit",
+    "plural": "Arbeiten",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "work; job",
+    "examples": ["Die Arbeit beginnt um neun Uhr."],
+    "set": "test"
+  }
+]
 
