@@ -174,25 +174,23 @@ filtered_vocab = [v for v in vocab_all if v["source_file"] == st.session_state.s
 
 
 # ----- STUDY MODE / REVIEW MODE -----
+# ----- STUDY MODE / REVIEW MODE -----
 mode_choice = st.sidebar.selectbox("Mode", ["Study", "Review Mistakes"])
 
-# If user changed mode, force rerun to pick new word
+# If the user switched modes, handle it
 if mode_choice != st.session_state.get("mode"):
     st.session_state.mode = mode_choice
-    # If switching to Review Mistakes and list is empty → show message
+
+    # If switching into Review Mode with no mistakes, stop immediately
     if mode_choice == "Review Mistakes" and not progress["mistakes"]:
         st.success("No mistakes to review! 🎉")
         st.stop()
-    pick_new_word()
-    st.rerun()
 
-# If mode did NOT change, just update session state normally
-st.session_state.mode = mode_choice
-
-# Now add the empty-mistakes message for the normal flow
-if mode_choice == "Review Mistakes" and not progress["mistakes"]:
-    st.success("No mistakes to review! 🎉")
-    st.stop()
+    # IMPORTANT: only call pick_new_word AFTER it's defined
+    # So we defer rerun until after we define it
+    st.session_state._pending_mode_switch = True
+else:
+    st.session_state.mode = mode_choice
 
 # Progress display
 total_items = len(filtered_vocab)
@@ -223,6 +221,11 @@ def pick_new_word():
             random.choice(progress["mistakes"]) if progress["mistakes"] else None
         )
 
+# If a mode switch was pending, now we can safely update the word and rerun
+if st.session_state.get("_pending_mode_switch"):
+    del st.session_state["_pending_mode_switch"]
+    pick_new_word()
+    st.rerun()
 
 if "current" not in st.session_state:
     pick_new_word()
