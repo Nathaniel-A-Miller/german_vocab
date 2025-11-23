@@ -230,7 +230,10 @@ st.markdown(f"""
 # Audio Recorder (HTML5 file input)
 # ============================================================
 
-audio_file = st.audio_input("Press to record your pronunciation")
+audio_file = st.audio_input(
+    "Press to record your pronunciation",
+    key=f"audio_{entry['word']}"
+)
 
 if audio_file is not None:
 
