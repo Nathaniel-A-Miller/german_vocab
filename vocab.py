@@ -43,6 +43,7 @@ def get_client():
 
 client = get_client()
 
+
 def transcribe_wav_file(path, sample_rate, channels):
     with open(path, "rb") as f:
         audio_bytes = f.read()
@@ -290,9 +291,12 @@ st.markdown(f"""
 # Audio Input
 # ============================================================
 
+# Clear old audio to prevent widget reuse issues
+st.session_state.pop("audio_input", None)
+
 audio_input = st.audio_input(
     "Press to record your pronunciation",
-    key=f"audio_{entry['word']}_{random.random()}"
+    key=f"audio_{entry['word']}"
 )
 
 if audio_input:
@@ -341,10 +345,9 @@ if audio_input:
         if entry["word"] not in progress["mistakes"]:
             progress["mistakes"].append(entry["word"])
 
-        # ---- Correct rotation logic (Option B) ----
+        # ---- Rotate incorrect item to back of queue ----
         if st.session_state.mode == "Review Mistakes":
             current_word = entry["word"]
-
             if current_word in st.session_state.review_queue:
                 idx = st.session_state.review_queue.index(current_word)
                 w = st.session_state.review_queue.pop(idx)
@@ -364,8 +367,6 @@ if audio_input:
 {entry['examples'][0] if entry['examples'] else "_None provided_"}
 """)
 
-    # NEXT BUTTON
     if st.button("Next"):
         pick_new_word()
-        st.session_state._force_refresh = True
         st.rerun()
