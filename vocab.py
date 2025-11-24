@@ -97,6 +97,7 @@ def check_answer(entry, transcript):
     # -----------------------------
     # STRICT NOUN MATCHING (TOKEN-BASED)
     # -----------------------------
+    singular_form = f"{gender} {word}".strip()
     singular_tokens = singular_form.split()       # ["die", "arbeit"]
     plural_tokens = plural.split() if plural else []
     
