@@ -187,8 +187,9 @@ if mode_choice != st.session_state.get("mode"):
             st.success("No mistakes to review! 🎉")
             st.stop()
 
-        # Build NEW finite queue from mistake words
-        st.session_state.review_queue = progress["mistakes"].copy()
+        # remove any duplicates before making the queue
+        unique_mistakes = list(dict.fromkeys(progress["mistakes"]))
+        st.session_state.review_queue = unique_mistakes.copy()
 
     st.session_state._pending_mode_switch = True
 
