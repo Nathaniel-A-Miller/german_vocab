@@ -73,17 +73,14 @@ def check_answer(entry, transcript):
     word = entry["word"].lower().strip()
     gender = entry["gender"].lower().strip()
     plural = entry["plural"].lower().strip()
+    countability = entry.get("countability", "countable")
 
     # -----------------------------
     # VERBS (including reflexive)
     # -----------------------------
     if pos in ["verb", "reflexive verb"]:
-        if word in t:
-            return True
         parts = word.split()
-        if len(parts) > 1:
-            return all(p in tokens for p in parts)
-        return word in tokens
+        return all(p in tokens for p in parts)
 
     # -----------------------------
     # ADJECTIVES / ADVERBS
@@ -92,24 +89,31 @@ def check_answer(entry, transcript):
         return word in tokens
 
     # -----------------------------
-    # NON-NOUN fallback
+    # NON-noun fallback
     # -----------------------------
     if not pos.startswith("noun"):
         return word in tokens
 
-    # -----------------------------
-    # NOUNS — strict matching
-    # -----------------------------
-    singular_form = f"{gender} {word}".strip()
+    # ============================================================
+    # NOUNS
+    # ============================================================
 
+    # Singular (lemma)
+    singular_form = f"{gender} {word}".strip()
     singular_ok = (singular_form in t) or (word in tokens)
 
-    if plural == "":
+    # ------- CASE A: Uncountable nouns -------
+    if countability == "uncountable":
         return singular_ok
 
-    plural_ok = plural in tokens or plural in t.split()
+    # ------- CASE B: Plural-only nouns -------
+    if countability == "plural-only":
+        return plural in tokens
 
+    # ------- CASE C: Regular countable nouns -------
+    plural_ok = plural and (plural in tokens)
     return singular_ok and plural_ok
+
 
 # ============================================================
 # Session State
