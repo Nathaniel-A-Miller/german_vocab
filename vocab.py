@@ -10,7 +10,7 @@ from google.oauth2 import service_account
 st.set_page_config(page_title="German Vocab Trainer", page_icon="🎤")
 
 # ============================================================
-# Load ALL vocab files from /german_vocab folder
+# Load ALL vocab files
 # ============================================================
 
 @st.cache_data
@@ -47,7 +47,6 @@ def transcribe_wav_file(path, sample_rate, channels):
         audio_bytes = f.read()
 
     audio = speech.RecognitionAudio(content=audio_bytes)
-
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         language_code="de-DE",
@@ -56,13 +55,12 @@ def transcribe_wav_file(path, sample_rate, channels):
     )
 
     response = client.recognize(config=config, audio=audio)
-
     if response.results:
         return response.results[0].alternatives[0].transcript.lower()
     return ""
 
 # ============================================================
-# POS / Whole-word / Reflexive / Noun matching logic
+# CHECK ANSWER — Strict matching logic
 # ============================================================
 
 def check_answer(entry, transcript):
@@ -74,60 +72,47 @@ def check_answer(entry, transcript):
     gender = entry["gender"].lower().strip()
     plural = entry["plural"].lower().strip()
 
-    # -----------------------------
     # VERBS (including reflexive)
-    # -----------------------------
     if pos in ["verb", "reflexive verb"]:
         parts = word.split()
         return all(p in tokens for p in parts)
 
-    # -----------------------------
     # ADJECTIVES / ADVERBS
-    # -----------------------------
     if "adjective" in pos or "adverb" in pos or pos == "adjective":
         return word in tokens
 
-    # -----------------------------
     # NON-NOUN fallback
-    # -----------------------------
     if not pos.startswith("noun"):
         return word in tokens
 
-    # ============================================================
-    # STRICT NOUN MATCHING (TOKEN-BASED)
-    # ============================================================
-
-    # singular must be EXACT: [article, noun]
+    # STRICT NOUN MATCHING
     singular_form = f"{gender} {word}".strip()
-    singular_tokens = singular_form.split()    # e.g. ["die", "arbeit"]
+    singular_tokens = singular_form.split()
 
-    # plural tokens
     plural_tokens = plural.split() if plural else []
 
-    toks = tokens
-
-    # ---- Check singular: token sequence must match exactly ----
+    # SINGULAR must match exact token sequence
     singular_ok = False
-    for i in range(len(toks) - len(singular_tokens) + 1):
-        if toks[i:i+len(singular_tokens)] == singular_tokens:
+    for i in range(len(tokens) - len(singular_tokens) + 1):
+        if tokens[i:i+len(singular_tokens)] == singular_tokens:
             singular_ok = True
             break
 
-    # ---- Uncountable nouns (Option B) ----
+    # UNCOUNTABLE (Option B)
     if plural == "" or plural == "—":
         return singular_ok
 
-    # ---- Check plural: must match exact token sequence ----
+    # PLURAL exact sequence match
     plural_ok = False
-    for i in range(len(toks) - len(plural_tokens) + 1):
-        if toks[i:i+len(plural_tokens)] == plural_tokens:
+    for i in range(len(tokens) - len(plural_tokens) + 1):
+        if tokens[i:i+len(plural_tokens)] == plural_tokens:
             plural_ok = True
             break
 
     return singular_ok and plural_ok
 
 # ============================================================
-# Session State Initialization
+# SESSION STATE INIT
 # ============================================================
 
 if "selected_file" not in st.session_state:
@@ -144,17 +129,17 @@ if st.session_state.selected_file not in st.session_state.progress:
         "reviewed": set(),
         "correct": 0,
         "wrong": 0,
-        "mistakes": []   # list of word strings
+        "mistakes": []      # list of word strings
     }
 
 progress = st.session_state.progress[st.session_state.selected_file]
 
-# Review queue for finite-cycle Review Mistakes mode
+# Review cycle queue
 if "review_queue" not in st.session_state:
     st.session_state.review_queue = []
 
 # ============================================================
-# Sidebar
+# SIDEBAR
 # ============================================================
 
 st.sidebar.header("Vocabulary Source File")
@@ -188,7 +173,8 @@ mode_choice = st.sidebar.selectbox(
     ["Study", "Review Mistakes"],
     key="mode_selector"
 )
-# Handle mode switch
+
+# Handle mode change
 if mode_choice != st.session_state.get("mode"):
     st.session_state.mode = mode_choice
 
@@ -197,283 +183,7 @@ if mode_choice != st.session_state.get("mode"):
             st.success("No mistakes to review! 🎉")
             st.stop()
 
-        # Build NEW finite queue from mistake words
-        st.session_state.review_queue = progress["mistakes"].copy()
-
-    st.session_state._pending_mode_switch = True
-
-else:
-    st.session_state.mode = mode_choice
-
-# Progress display
-total_items = len(filtered_vocab)
-reviewed_count = len(progress["reviewed"])
-
-st.sidebar.markdown(f"""
-### Progress
-- Total: **{total_items}**
-- Reviewed: **{reviewed_count}**
-- Correct: **{progress['correct']}**
-- Wrong: **{progress['wrong']}**
-""")
-
-if mode_choice == "Review Mistakes":
-    st.sidebar.markdown(f"### Mistakes left: **{len(st.session_state.review_queue)}**")
-
-# ============================================================
-# Word selection
-# ============================================================
-
-def pick_new_word():
-    if st.session_state.mode == "Study":
-        remaining = [v for v in filtered_vocab if v["word"] not in progress["reviewed"]]
-        st.session_state.current = random.choice(remaining) if remaining else None
-    else:
-        # Review mode: always take first in queue
-        if not st.session_state.review_queue:
-            st.session_state.current = None
-        else:
-            word_to_review = st.session_state.review_queue[0]
-            st.session_state.current = next(v for v in filtered_vocab if v["word"] == word_to_review)
-
-if st.session_state.get("_pending_mode_switch"):
-    del st.session_state["_pending_mode_switch"]
-    pick_new_word()
-    st.rerun()
-
-if "current" not in st.session_state:
-    pick_new_word()
-
-entry = st.session_state.current
-
-st.title("🎤 German Vocab Trainer")
-
-if entry is None:
-    if mode_choice == "Study":
-        st.success("You finished all items in this set! 🎉")
-    else:
-        st.success("No mistakes left! 🎉")
-    st.stop()
-
-# ============================================================
-# Prompt (English only)
-# ============================================================
-
-st.markdown(f"""
-## Meaning:
-**{entry['meaning']}**
-
-🎙️ Say the correct German form:
-- **Noun:** say article + singular, then plural  
-- **Verb:** say infinitive  
-- **Reflexive verb:** say both parts  
-- **Adjective/Adverb:** say lemma  
-""")
-
-# ============================================================
-# Audio Input
-# ============================================================
-
-audio_input = st.audio_input(
-    "Press to record your pronunciation",
-    key=f"audio_{entry['word']}"
-)
-
-if audio_input:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
-        tmp.write(audio_input.read())
-        audio_path = tmp.name
-
-    with wave.open(audio_path, "rb") as wf:
-        channels = wf.getnchannels()
-        sample_rate = wf.getframerate()
-
-    st.write("⏳ Transcribing...")
-
-    transcript = transcribe_wav_file(audio_path, sample_rate, channels)
-
-    st.markdown(f"### You said:\n**{transcript}**")
-
-    correct = check_answer(entry, transcript)
-    first_time = entry["word"] not in progress["reviewed"]
-
-    # =========================
-    #     UPDATE PROGRESS
-    # =========================
-
-    # ---- Correct ----
-    if correct:
-        st.success("Correct! 🎉")
-
-        if first_time:
-            progress["correct"] += 1
-
-        # remove from mistakes list
-        if entry["word"] in progress["mistakes"]:
-            progress["mistakes"].remove(entry["word"])
-
-        # remove from review queue
-        if st.session_state.mode == "Review Mistakes":
-            if entry["word"] in st.session_state.review_queue:
-                st.session_state.review_queue.remove(entry["word"])
-
-    # ---- Wrong ----
-    else:
-        st.error("Not quite.")
-
-        if first_time:
-            progress["wrong"] += 1
-
-        if entry["word"] not in progress["mistakes"]:
-            progress["mistakes"].append(entry["word"])
-
-        # move to back of queue (Review Mode)
-        if st.session_state.mode == "Review Mistakes":
-            if entry["word"] in st.session_state.review_queue:
-                w = st.session_state.review_queue.pop(0)
-                st.session_state.review_queue.append(w)
-
-    progress["reviewed"].add(entry["word"])
-
-    # Reveal answer
-    st.markdown(f"""
-### Correct German:
-- **{entry['word']}**
-- POS: **{entry['pos']}**
-- Gender: **{entry['gender'] or "—"}**
-- Plural: **{entry['plural'] or "—"}**
-
-### Example:
-{entry['examples'][0] if entry['examples'] else "_None provided_"}
-""")
-
-    if st.button("Next"):
-        pick_new_word()
-        st.rerun()# ============================================================
-
-def check_answer(entry, transcript):
-    t = transcript.lower().strip()
-    tokens = t.split()
-
-    pos = entry["pos"]
-    word = entry["word"].lower().strip()
-    gender = entry["gender"].lower().strip()
-    plural = entry["plural"].lower().strip()
-
-    # -----------------------------
-    # VERBS (including reflexive)
-    # -----------------------------
-    if pos in ["verb", "reflexive verb"]:
-        parts = word.split()
-        return all(p in tokens for p in parts)
-
-    # -----------------------------
-    # ADJECTIVES / ADVERBS
-    # -----------------------------
-    if "adjective" in pos or "adverb" in pos or pos == "adjective":
-        return word in tokens
-
-    # -----------------------------
-    # NON-NOUN fallback
-    # -----------------------------
-    if not pos.startswith("noun"):
-        return word in tokens
-
-    # ============================================================
-    # STRICT NOUN MATCHING (TOKEN-BASED)
-    # ============================================================
-
-    # singular must be EXACT: [article, noun]
-    singular_form = f"{gender} {word}".strip()
-    singular_tokens = singular_form.split()    # e.g. ["die", "arbeit"]
-
-    # plural tokens
-    plural_tokens = plural.split() if plural else []
-
-    toks = tokens
-
-    # ---- Check singular: token sequence must match exactly ----
-    singular_ok = False
-    for i in range(len(toks) - len(singular_tokens) + 1):
-        if toks[i:i+len(singular_tokens)] == singular_tokens:
-            singular_ok = True
-            break
-
-    # ---- Uncountable nouns (Option B) ----
-    if plural == "" or plural == "—":
-        return singular_ok
-
-    # ---- Check plural: must match exact token sequence ----
-    plural_ok = False
-    for i in range(len(toks) - len(plural_tokens) + 1):
-        if toks[i:i+len(plural_tokens)] == plural_tokens:
-            plural_ok = True
-            break
-
-    return singular_ok and plural_ok
-
-# ============================================================
-# Session State Initialization
-# ============================================================
-
-if "selected_file" not in st.session_state:
-    st.session_state.selected_file = vocab_files[0]
-
-if "mode" not in st.session_state:
-    st.session_state.mode = "Study"
-
-if "progress" not in st.session_state:
-    st.session_state.progress = {}
-
-if st.session_state.selected_file not in st.session_state.progress:
-    st.session_state.progress[st.session_state.selected_file] = {
-        "reviewed": set(),
-        "correct": 0,
-        "wrong": 0,
-        "mistakes": []   # list of word strings
-    }
-
-progress = st.session_state.progress[st.session_state.selected_file]
-
-# Review queue for finite-cycle Review Mistakes mode
-if "review_queue" not in st.session_state:
-    st.session_state.review_queue = []
-
-# ============================================================
-# Sidebar
-# ============================================================
-
-st.sidebar.header("Vocabulary Source File")
-
-file_choice = st.sidebar.selectbox("Choose vocab JSON file", vocab_files)
-
-if file_choice != st.session_state.selected_file:
-    st.session_state.selected_file = file_choice
-
-    if file_choice not in st.session_state.progress:
-        st.session_state.progress[file_choice] = {
-            "reviewed": set(),
-            "correct": 0,
-            "wrong": 0,
-            "mistakes": []
-        }
-
-    progress = st.session_state.progress[file_choice]
-
-filtered_vocab = [v for v in vocab_all if v["source_file"] == st.session_state.selected_file]
-
-mode_choice = st.sidebar.selectbox("Mode", ["Study", "Review Mistakes"])
-
-# Handle mode switch
-if mode_choice != st.session_state.get("mode"):
-    st.session_state.mode = mode_choice
-
-    if mode_choice == "Review Mistakes":
-        if not progress["mistakes"]:
-            st.success("No mistakes to review! 🎉")
-            st.stop()
-
-        # remove any duplicates before making the queue
+        # Create finite queue (unique order preserved)
         unique_mistakes = list(dict.fromkeys(progress["mistakes"]))
         st.session_state.review_queue = unique_mistakes.copy()
 
@@ -498,30 +208,41 @@ if mode_choice == "Review Mistakes":
     st.sidebar.markdown(f"### Mistakes left: **{len(st.session_state.review_queue)}**")
 
 # ============================================================
-# Word selection
+# WORD SELECTION
 # ============================================================
 
 def pick_new_word():
     if st.session_state.mode == "Study":
-        remaining = [v for v in filtered_vocab if v["word"] not in progress["reviewed"]]
+        remaining = [
+            v for v in filtered_vocab
+            if v["word"] not in progress["reviewed"]
+        ]
         st.session_state.current = random.choice(remaining) if remaining else None
-    else:
-        # Review mode: always take first in queue
+
+    else:  # REVIEW MODE
         if not st.session_state.review_queue:
             st.session_state.current = None
         else:
-            word_to_review = st.session_state.review_queue[0]
-            st.session_state.current = next(v for v in filtered_vocab if v["word"] == word_to_review)
+            next_word = st.session_state.review_queue[0]
+            st.session_state.current = next(
+                v for v in filtered_vocab if v["word"] == next_word
+            )
 
+# If switching modes, pick new word and rerun
 if st.session_state.get("_pending_mode_switch"):
     del st.session_state["_pending_mode_switch"]
     pick_new_word()
     st.rerun()
 
+# First load
 if "current" not in st.session_state:
     pick_new_word()
 
 entry = st.session_state.current
+
+# ============================================================
+# MAIN UI
+# ============================================================
 
 st.title("🎤 German Vocab Trainer")
 
@@ -532,23 +253,19 @@ if entry is None:
         st.success("No mistakes left! 🎉")
     st.stop()
 
-# ============================================================
-# Prompt (English only)
-# ============================================================
-
 st.markdown(f"""
 ## Meaning:
 **{entry['meaning']}**
 
 🎙️ Say the correct German form:
-- **Noun:** say article + singular, then plural  
-- **Verb:** say infinitive  
-- **Reflexive verb:** say both parts  
-- **Adjective/Adverb:** say lemma  
+- **Noun:** article + singular, then plural  
+- **Verb:** infinitive  
+- **Reflexive verb:** both parts  
+- **Adjective/Adverb:** lemma  
 """)
 
 # ============================================================
-# Audio Input
+# AUDIO INPUT
 # ============================================================
 
 audio_input = st.audio_input(
@@ -557,10 +274,12 @@ audio_input = st.audio_input(
 )
 
 if audio_input:
+    # save temp wav
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
         tmp.write(audio_input.read())
         audio_path = tmp.name
 
+    # audio metadata
     with wave.open(audio_path, "rb") as wf:
         channels = wf.getnchannels()
         sample_rate = wf.getframerate()
@@ -574,36 +293,27 @@ if audio_input:
     correct = check_answer(entry, transcript)
     first_time = entry["word"] not in progress["reviewed"]
 
-    # =========================
-    #     UPDATE PROGRESS
-    # =========================
+    # ========================================================
+    #       UPDATE PROGRESS
+    # ========================================================
 
-    # ---- Correct ----
+    # Correct
     if correct:
         st.success("Correct! 🎉")
 
         if first_time:
             progress["correct"] += 1
 
-    # rotate queue in review mode — rotate the *current* word, not the first word
-    if st.session_state.mode == "Review Mistakes":
-        current_word = entry["word"]
-    
-        # find where the current word actually is in the queue
-        if current_word in st.session_state.review_queue:
-            i = st.session_state.review_queue.index(current_word)
-    
-            # move that specific word to the end
-            w = st.session_state.review_queue.pop(i)
-            st.session_state.review_queue.append(w)
+        # Remove from mistakes list
+        if entry["word"] in progress["mistakes"]:
+            progress["mistakes"].remove(entry["word"])
 
-
-        # remove from review queue
+        # Remove from review queue
         if st.session_state.mode == "Review Mistakes":
             if entry["word"] in st.session_state.review_queue:
                 st.session_state.review_queue.remove(entry["word"])
 
-    # ---- Wrong ----
+    # Wrong
     else:
         st.error("Not quite.")
 
@@ -613,15 +323,16 @@ if audio_input:
         if entry["word"] not in progress["mistakes"]:
             progress["mistakes"].append(entry["word"])
 
-        # move to back of queue (Review Mode)
+        # Rotate queue: wrong goes to back
         if st.session_state.mode == "Review Mistakes":
             if entry["word"] in st.session_state.review_queue:
                 w = st.session_state.review_queue.pop(0)
                 st.session_state.review_queue.append(w)
 
+    # mark reviewed
     progress["reviewed"].add(entry["word"])
 
-    # Reveal answer
+    # Show correct answer
     st.markdown(f"""
 ### Correct German:
 - **{entry['word']}**
@@ -633,6 +344,7 @@ if audio_input:
 {entry['examples'][0] if entry['examples'] else "_None provided_"}
 """)
 
+    # NEXT button
     if st.button("Next"):
         pick_new_word()
         st.rerun()
