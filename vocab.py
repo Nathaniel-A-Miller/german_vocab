@@ -299,9 +299,16 @@ if audio_input:
         if first_time:
             progress["correct"] += 1
 
-        # rotate queue in review mode
-        if st.session_state.mode == "Review Mistakes":
-            w = st.session_state.review_queue.pop(0)
+    # rotate queue in review mode — rotate the *current* word, not the first word
+    if st.session_state.mode == "Review Mistakes":
+        current_word = entry["word"]
+    
+        # find where the current word actually is in the queue
+        if current_word in st.session_state.review_queue:
+            i = st.session_state.review_queue.index(current_word)
+    
+            # move that specific word to the end
+            w = st.session_state.review_queue.pop(i)
             st.session_state.review_queue.append(w)
 
 
