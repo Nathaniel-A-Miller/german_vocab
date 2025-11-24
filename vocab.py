@@ -159,7 +159,11 @@ if "review_queue" not in st.session_state:
 
 st.sidebar.header("Vocabulary Source File")
 
-file_choice = st.sidebar.selectbox("Choose vocab JSON file", vocab_files)
+file_choice = st.sidebar.selectbox(
+    "Choose vocab JSON file",
+    vocab_files,
+    key="file_selector"
+)
 
 if file_choice != st.session_state.selected_file:
     st.session_state.selected_file = file_choice
@@ -174,10 +178,16 @@ if file_choice != st.session_state.selected_file:
 
     progress = st.session_state.progress[file_choice]
 
-filtered_vocab = [v for v in vocab_all if v["source_file"] == st.session_state.selected_file]
+filtered_vocab = [
+    v for v in vocab_all
+    if v["source_file"] == st.session_state.selected_file
+]
 
-mode_choice = st.sidebar.selectbox("Mode", ["Study", "Review Mistakes"])
-
+mode_choice = st.sidebar.selectbox(
+    "Mode",
+    ["Study", "Review Mistakes"],
+    key="mode_selector"
+)
 # Handle mode switch
 if mode_choice != st.session_state.get("mode"):
     st.session_state.mode = mode_choice
