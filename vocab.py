@@ -94,26 +94,22 @@ def check_answer(entry, transcript):
     if not pos.startswith("noun"):
         return word in tokens
 
-    # ============================================================
-    # NOUNS
-    # ============================================================
-
-    # Singular (lemma)
+    # -----------------------------
+    # STRICT NOUN MATCHING
+    # -----------------------------
     singular_form = f"{gender} {word}".strip()
-    singular_ok = (singular_form in t) or (word in tokens)
-
-    # ------- CASE A: Uncountable nouns -------
-    if countability == "uncountable":
+    
+    # Require exact singular with article
+    singular_ok = singular_form in t
+    
+    # Uncountable nouns (plural empty or marked)
+    if plural == "" or plural == "—":
         return singular_ok
-
-    # ------- CASE B: Plural-only nouns -------
-    if countability == "plural-only":
-        return plural in tokens
-
-    # ------- CASE C: Regular countable nouns -------
-    plural_ok = plural and (plural in tokens)
+    
+    # Require plural explicitly
+    plural_ok = plural in tokens
+    
     return singular_ok and plural_ok
-
 
 # ============================================================
 # Session State
