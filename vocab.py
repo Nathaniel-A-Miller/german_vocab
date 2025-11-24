@@ -298,9 +298,11 @@ if audio_input:
         if first_time:
             progress["correct"] += 1
 
-        # remove from mistakes list
-        if entry["word"] in progress["mistakes"]:
-            progress["mistakes"].remove(entry["word"])
+        # rotate queue in review mode
+        if st.session_state.mode == "Review Mistakes":
+            w = st.session_state.review_queue.pop(0)
+            st.session_state.review_queue.append(w)
+
 
         # remove from review queue
         if st.session_state.mode == "Review Mistakes":
