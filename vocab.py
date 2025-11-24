@@ -302,5 +302,7 @@ if audio_input:
 """)
 
     if st.button("Next"):
+        # FORCE a refresh even if the next word is identical
+        st.session_state.current = None
         pick_word()
         st.rerun()
