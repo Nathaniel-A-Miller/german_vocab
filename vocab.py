@@ -124,6 +124,7 @@ def check_answer(entry, transcript):
     return singular_ok and plural_ok
 
 
+
 # ============================================================
 # Session State
 # ============================================================
