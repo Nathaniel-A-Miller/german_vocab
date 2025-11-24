@@ -95,21 +95,34 @@ def check_answer(entry, transcript):
         return word in tokens
 
     # -----------------------------
-    # STRICT NOUN MATCHING
+    # STRICT NOUN MATCHING (TOKEN-BASED)
     # -----------------------------
-    singular_form = f"{gender} {word}".strip()
+    singular_tokens = singular_form.split()       # ["die", "arbeit"]
+    plural_tokens = plural.split() if plural else []
     
-    # Require exact singular with article
-    singular_ok = singular_form in t
+    # Token list from ASR
+    toks = t.split()
     
-    # Uncountable nouns (plural empty or marked)
+    # --- Check singular: must match EXACT tokens ---
+    singular_ok = False
+    for i in range(len(toks) - len(singular_tokens) + 1):
+        if toks[i:i+len(singular_tokens)] == singular_tokens:
+            singular_ok = True
+            break
+    
+    # Uncountable / no plural
     if plural == "" or plural == "—":
         return singular_ok
     
-    # Require plural explicitly
-    plural_ok = plural in tokens
+    # --- Check plural: token must appear exactly ---
+    plural_ok = False
+    for i in range(len(toks) - len(plural_tokens) + 1):
+        if toks[i:i+len(plural_tokens)] == plural_tokens:
+            plural_ok = True
+            break
     
     return singular_ok and plural_ok
+
 
 # ============================================================
 # Session State
