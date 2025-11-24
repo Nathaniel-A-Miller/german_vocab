@@ -346,5 +346,10 @@ if audio_input:
 
     # NEXT button
     if st.button("Next"):
-        pick_new_word()
+    # In Review Mistakes mode, always force rerun
+    if st.session_state.mode == "Review Mistakes":
         st.rerun()
+
+    # Study mode normal behavior
+    pick_new_word()
+    st.rerun()
