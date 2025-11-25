@@ -279,7 +279,6 @@ st.markdown(f"""
 **Say the correct German for:**
 ###{entry['word']}
 
-
 - **Noun:** article + singular, then plural  
 - **Verb:** infinitive  
 - **Reflexive verb:** both parts  
