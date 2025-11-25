@@ -277,9 +277,9 @@ if entry is None:
 
 st.markdown(f"""
 ## Meaning:
-**{entry['meaning']}**
+**{entry['Say the correct German for']}**
 
-🎙️ Say the correct German form:
+🎙️
 - **Noun:** article + singular, then plural  
 - **Verb:** infinitive  
 - **Reflexive verb:** both parts  
