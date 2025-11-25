@@ -275,11 +275,10 @@ if entry is None:
 # Prompt
 # ============================================================
 
-st.markdown('''
+st.markdown("""
 **Say the correct German for:**  
 ### {}
-'''
-.format(entry["word"]))
+""".format(entry["word"]))
 
 
 - **Noun:** article + singular, then plural  
@@ -374,15 +373,25 @@ if audio_input:
 
     # Reveal answer
     st.markdown(f"""
-### Correct German:
-- **{entry['word']}**
-- POS: **{entry['pos']}**
-- Gender: **{entry['gender'] or "—"}**
-- Plural: **{entry['plural'] or "—"}**
+    ### Correct German:
+    - **{entry['word']}**
+    - POS: **{entry['pos']}**
+    - Gender: **{entry['gender'] or "—"}**
+    - Plural: **{entry['plural'] or "—"}**
+    
+    example = entry['examples'][0] if entry['examples'] else "_None provided_"
+    
+    st.markdown(f"""
+    ### Correct German:
+    - **{entry['word']}**
+    - POS: **{entry['pos']}**
+    - Gender: **{entry['gender'] or "—"}**
+    - Plural: **{entry['plural'] or "—"}**
+    
+    ### Example:
+    {example}
+    """)
 
-### Example:
-{entry['examples'][0] if entry['examples'] else "_None provided_"}
-""")
 
     if st.button("Next"):
         pick_new_word()
