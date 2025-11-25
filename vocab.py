@@ -261,8 +261,6 @@ if "current" not in st.session_state:
 
 entry = st.session_state.current
 
-st.title("🎤 German Vocab Trainer")
-
 if entry is None:
     if mode_choice == "Study":
         st.success("You finished all items in this set! 🎉")
@@ -276,7 +274,7 @@ if entry is None:
 # ============================================================
 
 st.markdown(f"""
-**Say the correct German for:**  
+###**Say the correct German for:**  
 ### {entry['word']}
 """)
 
