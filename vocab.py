@@ -352,6 +352,12 @@ if audio_input:
                 idx = st.session_state.review_queue.index(current_word)
                 w = st.session_state.review_queue.pop(idx)
                 st.session_state.review_queue.append(w)
+                
+        # If only one mistake remains, clear the "Not quite" message and reset UI
+        if st.session_state.mode == "Review Mistakes":
+            if len(st.session_state.review_queue) == 1:
+                st.rerun()
+
 
     progress["reviewed"].add(entry["word"])
 
