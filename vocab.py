@@ -275,9 +275,10 @@ if entry is None:
 # Prompt
 # ============================================================
 
-st.markdown("""
+st.markdown('''
 **Say the correct German for:**  
 ### {}
+'''
 .format(entry["word"]))
 
 
