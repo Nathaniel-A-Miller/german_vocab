@@ -274,8 +274,8 @@ if entry is None:
 # ============================================================
 
 st.markdown(f"""
-###**Say the correct German for:**  
-### {entry['word']}
+**###Say the correct German for:**  
+## {entry['word']}
 """)
 
 st.markdown("""
