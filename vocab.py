@@ -370,13 +370,13 @@ if audio_input:
 
     progress["reviewed"].add(entry["word"])
 
-    # Reveal answer
-    st.markdown(f"""
-    ### Correct German:
-    - **{entry['word']}**
-    - POS: **{entry['pos']}**
-    - Gender: **{entry['gender'] or "—"}**
-    - Plural: **{entry['plural'] or "—"}**
+# Reveal answer
+st.markdown(f"""
+### Correct German:
+- **{entry['word']}**
+- POS: **{entry['pos']}**
+- Gender: **{entry['gender'] or "—"}**
+- Plural: **{entry['plural'] or "—"}**
     
     example = entry['examples'][0] if entry['examples'] else "_None provided_"
     
@@ -390,6 +390,7 @@ if audio_input:
     ### Example:
     {example}
     """)
+
 
 
     if st.button("Next"):
