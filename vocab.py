@@ -277,8 +277,7 @@ if entry is None:
 
 st.markdown("""
 **Say the correct German for:**  
-### {}
-""".format(entry["word"]))
+### {}.format(entry["word"]))
 
 
 - **Noun:** article + singular, then plural  
