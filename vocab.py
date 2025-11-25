@@ -275,11 +275,12 @@ if entry is None:
 # Prompt
 # ============================================================
 
-st.markdown("""
+st.markdown(f"""
 **Say the correct German for:**  
-### {}.format(entry["word"]))
+### {entry['word']}
+""")
 
-
+st.markdown("""
 - **Noun:** article + singular, then plural  
 - **Verb:** infinitive  
 - **Reflexive verb:** both parts  
@@ -311,14 +312,13 @@ if audio_input:
     st.write("⏳ Transcribing...")
 
     transcript = transcribe_wav_file(audio_path, sample_rate, channels)
-
     st.markdown(f"### You said:\n**{transcript}**")
 
     correct = check_answer(entry, transcript)
     first_time = entry["word"] not in progress["reviewed"]
 
     # ============================================================
-    # UPDATE PROGRESS
+    # UPDATE PROGRESS + MESSAGES
     # ============================================================
 
     if correct:
@@ -327,71 +327,61 @@ if audio_input:
         if first_time:
             progress["correct"] += 1
 
-        # Remove from mistakes
         if entry["word"] in progress["mistakes"]:
             progress["mistakes"].remove(entry["word"])
 
-        # Remove from review queue
         if st.session_state.mode == "Review Mistakes":
             if entry["word"] in st.session_state.review_queue:
                 st.session_state.review_queue.remove(entry["word"])
 
     else:
-        # Default wrong-answer message
+        # default wrong message
         message = "Not quite."
-    
+
         if first_time:
             progress["wrong"] += 1
-    
+
         if entry["word"] not in progress["mistakes"]:
             progress["mistakes"].append(entry["word"])
-    
-        # ---- Review Mode Rotation ----
+
+        # review-mode rotation
         if st.session_state.mode == "Review Mistakes":
+
             current_word = entry["word"]
             if current_word in st.session_state.review_queue:
                 idx = st.session_state.review_queue.index(current_word)
                 w = st.session_state.review_queue.pop(idx)
                 st.session_state.review_queue.append(w)
-    
-            # ---- Edge Case: ONLY ONE item left ----
+
+            # ONE-ITEM-LEFT CASE → modify message
             if len(st.session_state.review_queue) == 1:
                 message = "Not quite — try again."
-    
-        # Display whatever message was selected
+
         st.error(message)
 
-                
-        # If only one mistake remains, clear the "Not quite" message and reset UI
+        # one-item-left reset (removes stale message)
         if st.session_state.mode == "Review Mistakes":
             if len(st.session_state.review_queue) == 1:
                 st.rerun()
 
-
     progress["reviewed"].add(entry["word"])
 
-# Reveal answer
-st.markdown(f"""
+    # ============================================================
+    # Reveal correct answer
+    # ============================================================
+
+    example = entry['examples'][0] if entry['examples'] else "_None provided_"
+
+    st.markdown(f"""
 ### Correct German:
 - **{entry['word']}**
 - POS: **{entry['pos']}**
 - Gender: **{entry['gender'] or "—"}**
 - Plural: **{entry['plural'] or "—"}**
-    
-    example = entry['examples'][0] if entry['examples'] else "_None provided_"
-    
-    st.markdown(f"""
-    ### Correct German:
-    - **{entry['word']}**
-    - POS: **{entry['pos']}**
-    - Gender: **{entry['gender'] or "—"}**
-    - Plural: **{entry['plural'] or "—"}**
-    
-    ### Example:
-    {example}
-    """)
 
-
+### Example:
+{example}
+""")
 
     if st.button("Next"):
         pick_new_word()
