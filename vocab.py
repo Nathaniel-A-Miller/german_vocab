@@ -275,10 +275,11 @@ if entry is None:
 # Prompt
 # ============================================================
 
-st.markdown(f"""
+st.markdown("""
 **Say the correct German for:**  
-### {entry['word']}
-""")
+### {}
+""".format(entry["word"]))
+
 
 - **Noun:** article + singular, then plural  
 - **Verb:** infinitive  
