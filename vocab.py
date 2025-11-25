@@ -276,7 +276,6 @@ if entry is None:
 # ============================================================
 
 st.markdown(f"""
-## Meaning:
 **{entry['Say the correct German for']}**
 
 🎙️
