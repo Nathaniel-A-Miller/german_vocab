@@ -277,11 +277,8 @@ if entry is None:
 
 st.markdown(f"""
 **Say the correct German for:**  
-<p style="font-size: 32px; font-weight: bold; text-align: center;">
-{entry['word']}
-</p>
-""", unsafe_allow_html=True)
-
+### {entry['word']}
+""")
 
 - **Noun:** article + singular, then plural  
 - **Verb:** infinitive  
