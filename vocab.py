@@ -337,21 +337,30 @@ if audio_input:
                 st.session_state.review_queue.remove(entry["word"])
 
     else:
-        st.error("Not quite.")
-
+        # Default wrong-answer message
+        message = "Not quite."
+    
         if first_time:
             progress["wrong"] += 1
-
+    
         if entry["word"] not in progress["mistakes"]:
             progress["mistakes"].append(entry["word"])
-
-        # ---- Rotate incorrect item to back of queue ----
+    
+        # ---- Review Mode Rotation ----
         if st.session_state.mode == "Review Mistakes":
             current_word = entry["word"]
             if current_word in st.session_state.review_queue:
                 idx = st.session_state.review_queue.index(current_word)
                 w = st.session_state.review_queue.pop(idx)
                 st.session_state.review_queue.append(w)
+    
+            # ---- Edge Case: ONLY ONE item left ----
+            if len(st.session_state.review_queue) == 1:
+                message = "Not quite — try again."
+    
+        # Display whatever message was selected
+        st.error(message)
+
                 
         # If only one mistake remains, clear the "Not quite" message and reset UI
         if st.session_state.mode == "Review Mistakes":
