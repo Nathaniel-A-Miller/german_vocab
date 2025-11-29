@@ -139,6 +139,9 @@ if "mode" not in st.session_state:
 if "easy_mode" not in st.session_state:
     st.session_state.easy_mode = False
 
+if "selected_set" not in st.session_state:
+    st.session_state.selected_set = "All sets"
+
 if "progress" not in st.session_state:
     st.session_state.progress = {}
 
@@ -194,6 +197,38 @@ filtered_vocab = [
     v for v in vocab_all
     if v["source_file"] == st.session_state.selected_file
 ]
+
+# Get unique sets from current file
+available_sets = sorted(list(set(
+    v.get("set", "No set") for v in filtered_vocab
+)))
+
+# Add "All sets" option
+set_options = ["All sets"] + available_sets
+
+if "selected_set" not in st.session_state:
+    st.session_state.selected_set = "All sets"
+
+set_choice = st.sidebar.selectbox(
+    "Filter by set",
+    set_options,
+    index=set_options.index(st.session_state.selected_set) if st.session_state.selected_set in set_options else 0,
+    key="set_selector"
+)
+
+# Handle set change
+if set_choice != st.session_state.selected_set:
+    st.session_state.selected_set = set_choice
+    if "current" in st.session_state:
+        del st.session_state["current"]
+    st.rerun()
+
+# Filter by set if not "All sets"
+if st.session_state.selected_set != "All sets":
+    filtered_vocab = [
+        v for v in filtered_vocab
+        if v.get("set", "No set") == st.session_state.selected_set
+    ]
 
 mode_choice = st.sidebar.selectbox(
     "Mode",
