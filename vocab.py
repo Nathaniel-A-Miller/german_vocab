@@ -376,6 +376,9 @@ if audio_input:
 
     correct = check_answer(entry, transcript)
     first_time = entry["word"] not in progress["reviewed"]
+    
+    # Store first_time status for later use
+    st.session_state.was_first_time = first_time
 
     # ============================================================
     # UPDATE PROGRESS + MESSAGES
@@ -444,8 +447,8 @@ if audio_input:
     # Mark as correct button (only show when wrong)
     if not correct:
         if st.button("Mark as Correct (ASR error)", key=f"override_{entry['word']}"):
-            # Undo the wrong marking
-            if first_time:
+            # Undo the wrong marking using stored first_time status
+            if st.session_state.get("was_first_time", False):
                 progress["wrong"] -= 1
                 progress["correct"] += 1
             
@@ -457,6 +460,10 @@ if audio_input:
             if st.session_state.mode == "Review Mistakes":
                 if entry["word"] in st.session_state.review_queue:
                     st.session_state.review_queue.remove(entry["word"])
+            
+            # Clean up
+            if "was_first_time" in st.session_state:
+                del st.session_state["was_first_time"]
             
             # Pick next word and advance
             pick_new_word()
