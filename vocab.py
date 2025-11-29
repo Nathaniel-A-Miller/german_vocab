@@ -200,7 +200,7 @@ if mode_choice != st.session_state.mode:
         st.session_state.review_queue = list(dict.fromkeys(progress["mistakes"]))
 
     st.session_state.current = None
-    st.experimental_rerun()
+    st.rerun()
 
 # ============================================================
 # DISPLAY PROGRESS
