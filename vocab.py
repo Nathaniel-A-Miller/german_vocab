@@ -491,16 +491,13 @@ if audio_input:
 {example}
 """)
 
-    # Play example sentence button
+    # Generate and display audio player for example sentence
     if entry['examples']:
-        if st.button("🔊 Play Example Sentence", key=f"tts_{entry['word']}"):
-            with st.spinner("Generating audio..."):
-                try:
-                    audio_content = text_to_speech(entry['examples'][0])
-                    st.audio(audio_content, format='audio/mp3')
-                except Exception as e:
-                    st.error(f"Error generating audio: {str(e)}")
-                    st.info("Make sure the Text-to-Speech API is enabled in your Google Cloud project.")
+        try:
+            audio_content = text_to_speech(entry['examples'][0])
+            st.audio(audio_content, format='audio/mp3')
+        except Exception as e:
+            st.error(f"Error generating audio: {str(e)}")
 
     if st.button("Next"):
         pick_new_word()
