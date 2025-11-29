@@ -2,6 +2,6 @@ streamlit
 streamlit-webrtc
 google-cloud-speech
 rapidfuzz
-google-cloud-speech
 streamlit-webrtc
 numpy
+google-cloud-texttospeech
