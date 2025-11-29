@@ -184,6 +184,11 @@ if file_choice != st.session_state.selected_file:
         }
 
     progress = st.session_state.progress[file_choice]
+    
+    # Reset current word and trigger rerun
+    if "current" in st.session_state:
+        del st.session_state["current"]
+    st.rerun()
 
 filtered_vocab = [
     v for v in vocab_all
