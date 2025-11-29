@@ -257,15 +257,14 @@ if entry is None:
 if st.session_state.mode == "Easy Mode (Show German)":
     st.markdown(f"""
 ### Say this German aloud:
-## **{entry['gender']} {entry['word']}**
-### Plural: **{entry['plural']}**
-#### Meaning: *{entry['meaning']}*
+
+**{entry['gender']} {entry['word']}**
+
+**Plural:** {entry['plural'] or "—"}
+
+**Meaning:** *{entry['meaning']}*
 """)
-else:
-    st.markdown(f"""
-### Say the correct German for:
-## {entry['meaning']}
-""")
+
 
 st.markdown("""
 - **Noun:** article + singular → plural  
