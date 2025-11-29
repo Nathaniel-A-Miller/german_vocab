@@ -443,11 +443,6 @@ if audio_input:
     
     # Mark as correct button (only show when wrong)
     if not correct:
-        # Debug info
-        st.write(f"DEBUG - Word in reviewed: {entry['word'] in progress['reviewed']}")
-        st.write(f"DEBUG - Current wrong count: {progress['wrong']}")
-        st.write(f"DEBUG - Current correct count: {progress['correct']}")
-        
         if st.button("Mark as Correct (ASR error)", key=f"override_{entry['word']}"):
             # The word was just added to reviewed in the wrong branch above
             # So we need to check if wrong count was incremented (it's > 0)
