@@ -10,6 +10,13 @@ from google.oauth2 import service_account
 st.set_page_config(page_title="German Vocab Trainer", page_icon="🎤")
 
 # ============================================================
+# HELPERS
+# ============================================================
+
+def make_key(entry):
+    return f"{entry['source_file']}::{entry['word']}"
+
+# ============================================================
 # LOAD ALL VOCAB FILES
 # ============================================================
 
@@ -59,7 +66,6 @@ def transcribe_wav_file(path, sample_rate, channels):
         return response.results[0].alternatives[0].transcript.lower()
     return ""
 
-
 # ============================================================
 # CHECK ANSWER
 # ============================================================
@@ -67,29 +73,28 @@ def transcribe_wav_file(path, sample_rate, channels):
 def check_answer(entry, transcript):
     t = transcript.lower().strip()
 
-    pos = entry["pos"]
+    pos = entry["pos"].lower()
     word = entry["word"].lower().strip()
     gender = entry["gender"].lower().strip()
     plural = entry["plural"].lower().strip()
 
-    # ---------- VERBS ----------
+    # VERBS — exact infinitive only
     if pos in ["verb", "reflexive verb"]:
         return t == word
 
-    # ---------- ADJECTIVES / ADVERBS ----------
+    # ADJECTIVES / ADVERBS — lemma only
     if "adjective" in pos or "adverb" in pos:
         return t == word
 
-    # ---------- NON-NOUN FALLBACK ----------
+    # NON-NOUNS fallback
     if not pos.startswith("noun"):
         return t == word
 
-    # ---------- NOUNS ----------
-    singular_form = f"{gender} {word}".strip()      # e.g. "die berufung"
-    plural_form   = plural.strip()                  # e.g. "berufungen"
+    # NOUNS — exact singular or exact plural only
+    singular_form = f"{gender} {word}".strip()
+    plural_form = plural
 
-    # Accept EXACTLY singular or EXACTLY plural — nothing else.
-    return t == singular_form or (plural and t == plural_form)
+    return t == singular_form or (plural_form and t == plural_form)
 
 # ============================================================
 # SESSION STATE INITIALIZATION
@@ -110,13 +115,11 @@ if "review_queue" not in st.session_state:
 if "current" not in st.session_state:
     st.session_state.current = None
 
-
 # ============================================================
 # SIDEBAR — FILE SELECTION
 # ============================================================
 
 st.sidebar.header("Vocabulary Source File")
-
 file_choice = st.sidebar.selectbox(
     "Choose vocab JSON file",
     vocab_files,
@@ -124,15 +127,13 @@ file_choice = st.sidebar.selectbox(
 )
 
 # ============================================================
-# FILE SWITCH HANDLING (IMPORTANT SECTION)
+# FILE SWITCH HANDLING
 # ============================================================
 
 if file_choice != st.session_state.selected_file:
 
-    # 1) Update selection
     st.session_state.selected_file = file_choice
 
-    # 2) Reset progress for this file
     st.session_state.progress[file_choice] = {
         "reviewed": set(),
         "correct": 0,
@@ -140,15 +141,13 @@ if file_choice != st.session_state.selected_file:
         "mistakes": []
     }
 
-    # 3) Reset mode/session-state
     st.session_state.review_queue = []
     st.session_state.current = None
 
-    # 4) Rerun
     st.rerun()
 
 # ============================================================
-# PROGRESS BINDING — MUST OCCUR AFTER FILE SWITCH LOGIC
+# PROGRESS BINDING
 # ============================================================
 
 progress = st.session_state.progress.setdefault(
@@ -157,7 +156,7 @@ progress = st.session_state.progress.setdefault(
 )
 
 # ============================================================
-# FILTER VOCAB FOR CURRENT FILE
+# FILTER VOCAB
 # ============================================================
 
 filtered_vocab = [
@@ -182,7 +181,6 @@ if mode_choice != st.session_state.mode:
         if not progress["mistakes"]:
             st.success("No mistakes to review! 🎉")
             st.stop()
-
         st.session_state.review_queue = list(dict.fromkeys(progress["mistakes"]))
 
     st.session_state.current = None
@@ -203,7 +201,6 @@ st.sidebar.markdown(f"""
 if st.session_state.mode == "Review Mistakes":
     st.sidebar.markdown(f"### Mistakes left: **{len(st.session_state.review_queue)}**")
 
-
 # ============================================================
 # PICK NEXT WORD
 # ============================================================
@@ -212,16 +209,16 @@ def pick_new_word():
     if st.session_state.mode in ["Study", "Easy Mode (Show German)"]:
         remaining = [
             v for v in filtered_vocab
-            if v["word"] not in progress["reviewed"]
+            if make_key(v) not in progress["reviewed"]
         ]
         st.session_state.current = random.choice(remaining) if remaining else None
-    else:  # review mode
+    else:
         if not st.session_state.review_queue:
             st.session_state.current = None
         else:
-            w = st.session_state.review_queue[0]
+            key = st.session_state.review_queue[0]
             st.session_state.current = next(
-                v for v in filtered_vocab if v["word"] == w
+                v for v in filtered_vocab if make_key(v) == key
             )
 
 if st.session_state.current is None:
@@ -240,7 +237,6 @@ if entry is None:
 # PROMPT
 # ============================================================
 
-# STUDY MODE — SHOW MEANING ONLY
 if st.session_state.mode == "Study":
     st.markdown(f"""
 ### Say the correct German for:
@@ -248,7 +244,6 @@ if st.session_state.mode == "Study":
 ## *{entry['meaning']}*
 """)
 
-# EASY MODE — SHOW GERMAN DIRECTLY
 elif st.session_state.mode == "Easy Mode (Show German)":
     st.markdown(f"""
 ### Say this German aloud:
@@ -274,7 +269,7 @@ st.session_state.pop("audio_input", None)
 
 audio_input = st.audio_input(
     "Press to record your pronunciation",
-    key=f"audio_{entry['word']}"
+    key=f"audio_{make_key(entry)}"
 )
 
 if audio_input:
@@ -291,32 +286,32 @@ if audio_input:
     st.markdown(f"### You said:\n**{transcript}**")
 
     correct = check_answer(entry, transcript)
-    first_time = entry["word"] not in progress["reviewed"]
+    key = make_key(entry)
+    first_time = key not in progress["reviewed"]
 
     if correct:
         st.success("Correct! 🎉")
         if first_time:
             progress["correct"] += 1
-        if entry["word"] in progress["mistakes"]:
-            progress["mistakes"].remove(entry["word"])
+        if key in progress["mistakes"]:
+            progress["mistakes"].remove(key)
         if st.session_state.mode == "Review Mistakes":
-            if entry["word"] in st.session_state.review_queue:
-                st.session_state.review_queue.remove(entry["word"])
+            if key in st.session_state.review_queue:
+                st.session_state.review_queue.remove(key)
     else:
         st.error("Not quite.")
         if first_time:
             progress["wrong"] += 1
-        if entry["word"] not in progress["mistakes"]:
-            progress["mistakes"].append(entry["word"])
+        if key not in progress["mistakes"]:
+            progress["mistakes"].append(key)
         if st.session_state.mode == "Review Mistakes":
-            if entry["word"] in st.session_state.review_queue:
+            if key in st.session_state.review_queue:
                 st.session_state.review_queue.append(
                     st.session_state.review_queue.pop(0)
                 )
 
-    progress["reviewed"].add(entry["word"])
+    progress["reviewed"].add(key)
 
-    # Show correct answer
     example = entry["examples"][0] if entry["examples"] else "_None provided_"
 
     st.markdown(f"""
