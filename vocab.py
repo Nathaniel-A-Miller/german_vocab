@@ -376,9 +376,6 @@ if audio_input:
 
     correct = check_answer(entry, transcript)
     first_time = entry["word"] not in progress["reviewed"]
-    
-    # Store first_time status for later use
-    st.session_state.was_first_time = first_time
 
     # ============================================================
     # UPDATE PROGRESS + MESSAGES
@@ -389,6 +386,7 @@ if audio_input:
 
         if first_time:
             progress["correct"] += 1
+            progress["reviewed"].add(entry["word"])
 
         if entry["word"] in progress["mistakes"]:
             progress["mistakes"].remove(entry["word"])
@@ -403,6 +401,7 @@ if audio_input:
 
         if first_time:
             progress["wrong"] += 1
+            progress["reviewed"].add(entry["word"])
 
         if entry["word"] not in progress["mistakes"]:
             progress["mistakes"].append(entry["word"])
@@ -441,14 +440,15 @@ if audio_input:
         if st.session_state.mode == "Review Mistakes":
             if len(st.session_state.review_queue) == 1:
                 st.rerun()
-
-    progress["reviewed"].add(entry["word"])
     
     # Mark as correct button (only show when wrong)
     if not correct:
         if st.button("Mark as Correct (ASR error)", key=f"override_{entry['word']}"):
-            # Undo the wrong marking using stored first_time status
-            if st.session_state.get("was_first_time", False):
+            # Check if this word was already reviewed before this attempt
+            was_already_reviewed = entry["word"] in progress["reviewed"]
+            
+            if not was_already_reviewed:
+                # First time seeing this word - need to fix the stats
                 progress["wrong"] -= 1
                 progress["correct"] += 1
             
@@ -460,10 +460,6 @@ if audio_input:
             if st.session_state.mode == "Review Mistakes":
                 if entry["word"] in st.session_state.review_queue:
                     st.session_state.review_queue.remove(entry["word"])
-            
-            # Clean up
-            if "was_first_time" in st.session_state:
-                del st.session_state["was_first_time"]
             
             # Pick next word and advance
             pick_new_word()
