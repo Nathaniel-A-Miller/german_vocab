@@ -136,6 +136,9 @@ if "selected_file" not in st.session_state:
 if "mode" not in st.session_state:
     st.session_state.mode = "Study"
 
+if "easy_mode" not in st.session_state:
+    st.session_state.easy_mode = False
+
 if "progress" not in st.session_state:
     st.session_state.progress = {}
 
@@ -181,6 +184,11 @@ if file_choice != st.session_state.selected_file:
         }
 
     progress = st.session_state.progress[file_choice]
+    
+    # Reset current word and trigger rerun
+    if "current" in st.session_state:
+        del st.session_state["current"]
+    st.rerun()
 
 filtered_vocab = [
     v for v in vocab_all
@@ -192,6 +200,14 @@ mode_choice = st.sidebar.selectbox(
     ["Study", "Review Mistakes"],
     key="mode_selector"
 )
+
+# Easy mode toggle
+easy_mode = st.sidebar.checkbox(
+    "Easy mode (show German word)",
+    value=st.session_state.easy_mode,
+    key="easy_mode_checkbox"
+)
+st.session_state.easy_mode = easy_mode
 
 # Mode change handling
 if mode_choice != st.session_state.get("mode"):
@@ -273,7 +289,18 @@ if entry is None:
 # Prompt
 # ============================================================
 
-st.markdown(f"""
+if st.session_state.easy_mode:
+    # Easy mode: show German word
+    st.markdown(f"""
+### Say this German word correctly:  
+## {entry['word']}
+- **Gender:** {entry['gender'] or "—"}
+- **Plural:** {entry['plural'] or "—"}
+- **Meaning:** {entry['meaning']}
+""")
+else:
+    # Normal mode: show English meaning
+    st.markdown(f"""
 ### Say the correct German for:  
 ## {entry['meaning']}
 """)
