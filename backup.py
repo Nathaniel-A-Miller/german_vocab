@@ -386,6 +386,7 @@ if audio_input:
 
         if first_time:
             progress["correct"] += 1
+            progress["reviewed"].add(entry["word"])
 
         if entry["word"] in progress["mistakes"]:
             progress["mistakes"].remove(entry["word"])
@@ -400,6 +401,7 @@ if audio_input:
 
         if first_time:
             progress["wrong"] += 1
+            progress["reviewed"].add(entry["word"])
 
         if entry["word"] not in progress["mistakes"]:
             progress["mistakes"].append(entry["word"])
@@ -418,13 +420,48 @@ if audio_input:
                 message = "Not quite — try again."
 
         st.error(message)
+        
+        # Show expected vs heard
+        expected_parts = []
+        if entry["pos"].startswith("noun"):
+            expected_parts.append(f"{entry['gender']} {entry['word']}")
+            if entry['plural'] and entry['plural'] != "—":
+                expected_parts.append(entry['plural'])
+        elif entry["pos"] in ["verb", "reflexive verb"]:
+            expected_parts.append(entry["word"])
+        else:
+            expected_parts.append(entry["word"])
+        
+        expected_str = ", ".join(expected_parts)
+        st.markdown(f"**Expected:** {expected_str}")
+        st.markdown(f"**You said:** {transcript}")
 
         # one-item-left reset (removes stale message)
         if st.session_state.mode == "Review Mistakes":
             if len(st.session_state.review_queue) == 1:
                 st.rerun()
-
-    progress["reviewed"].add(entry["word"])
+    
+    # Mark as correct button (only show when wrong)
+    if not correct:
+        if st.button("Mark as Correct (ASR error)", key=f"override_{entry['word']}"):
+            # The word was just added to reviewed in the wrong branch above
+            # So we need to check if wrong count was incremented (it's > 0)
+            if progress["wrong"] > 0:
+                progress["wrong"] -= 1
+                progress["correct"] += 1
+            
+            # Remove from mistakes
+            if entry["word"] in progress["mistakes"]:
+                progress["mistakes"].remove(entry["word"])
+            
+            # Remove from review queue if in review mode
+            if st.session_state.mode == "Review Mistakes":
+                if entry["word"] in st.session_state.review_queue:
+                    st.session_state.review_queue.remove(entry["word"])
+            
+            # Pick next word and advance
+            pick_new_word()
+            st.rerun()
 
     # ============================================================
     # Reveal correct answer
