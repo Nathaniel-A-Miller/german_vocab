@@ -97,6 +97,124 @@
     "meaning": "work; job",
     "examples": ["Die Arbeit beginnt um neun Uhr."],
     "set": "test"
+  },
+  {
+    "word": "entgegenkommen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "meaning": "to accommodate (wishes)",
+    "examples": ["Wir kommen deinen Wünschen gern entgegen."],
+    "set": "November"
+  },
+  {
+    "word": "Berufung",
+    "plural": "Berufungen",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "appeal (legal); to file an appeal",
+    "examples": ["Der Anwalt hat eine Berufung eingelegt."],
+    "set": "November"
+  },
+  {
+    "word": "Berufung",
+    "plural": "Berufungen",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "citation (under citation of)",
+    "examples": ["„Unter Berufung auf mehrere Quellen argumentierte er, dass die aktuellen Forschungsergebnisse eine neue Perspektive auf das Thema bieten.“"],
+    "set": "November"
+  },
+  {
+    "word": "Schlagabtausch",
+    "plural": "Schlagabtausche",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "clash, exchange of blows/arguments",
+    "examples": ["Im Parlament kam es zu einem heftigen Schlagabtausch."],
+    "set": "November"
+  },
+  {
+    "word": "Gewahrsam",
+    "plural": "",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "custody; to take into custody",
+    "examples": ["Die Polizei nahm den Verdächtigen in Gewahrsam."],
+    "set": "November"
+  },
+  {
+    "word": "Schädling",
+    "plural": "Schädlinge",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "pest, vermin",
+    "examples": ["Der Landwirt kämpft jedes Jahr gegen Schädlinge."],
+    "set": "November"
+  },
+  {
+    "word": "Einweihungsparty",
+    "plural": "Einweihungspartys",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "housewarming party",
+    "examples": ["Wir wurden zu ihrer Einweihungsparty eingeladen."],
+    "set": "November"
+  },
+  {
+    "word": "Schädlingsbekämpfungsmittel",
+    "plural": "Schädlingsbekämpfungsmittel",
+    "gender": "das",
+    "pos": "noun",
+    "meaning": "pesticide",
+    "examples": ["Das Schädlingsbekämpfungsmittel sollte sparsam verwendet werden."],
+    "set": "November"
+  },
+  {
+    "word": "anbringen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "meaning": "attach, install, fix",
+    "examples": ["Er hat den Spiegel an der Wand angebracht."],
+    "set": "November"
+  },
+  {
+    "word": "Gerüst",
+    "plural": "Gerüste",
+    "gender": "das",
+    "pos": "noun",
+    "meaning": "scaffolding",
+    "examples": ["Das Gerüst wurde für die Renovierungsarbeiten aufgebaut."],
+    "set": "November"
+  },
+  {
+    "word": "Haken",
+    "plural": "Haken",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "hook",
+    "examples": ["Der Mantel hängt am Haken neben der Tür."],
+    "set": "November"
+  },
+  {
+    "word": "sich verlassen auf",
+    "plural": "",
+    "gender": "",
+    "pos": "reflexive verb",
+    "meaning": "to bank on, to count on",
+    "examples": ["Auf ihn kann man sich immer verlassen."],
+    "set": "November"
+  },
+  {
+    "word": "Alleinerziehender",
+    "plural": "Alleinerziehende",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "single parent",
+    "examples": ["Als Alleinerziehender hat er viele Herausforderungen zu meistern."],
+    "set": "November"
   }
 ]
+
 
