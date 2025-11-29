@@ -446,11 +446,6 @@ if audio_input:
         expected_str = ", ".join(expected_parts)
         st.markdown(f"**Expected:** {expected_str}")
         st.markdown(f"**You said:** {transcript}")
-
-        # one-item-left reset (removes stale message)
-        if st.session_state.mode == "Review Mistakes":
-            if len(st.session_state.review_queue) == 1:
-                st.rerun()
     
     # Mark as correct button (only show when wrong)
     if not correct:
