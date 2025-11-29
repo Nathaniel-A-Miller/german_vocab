@@ -5,8 +5,9 @@ import random
 import wave
 import tempfile
 from google.cloud import speech_v1p1beta1 as speech
-from google.cloud import texttospeech
 from google.oauth2 import service_account
+from gtts import gTTS
+import io
 
 st.set_page_config(page_title="German Vocab Trainer", page_icon="🎤")
 
@@ -42,36 +43,16 @@ def get_client():
     credentials = service_account.Credentials.from_service_account_info(creds)
     return speech.SpeechClient(credentials=credentials)
 
-@st.cache_resource
-def get_tts_client():
-    creds = st.secrets["google"]["credentials"]
-    credentials = service_account.Credentials.from_service_account_info(creds)
-    return texttospeech.TextToSpeechClient(credentials=credentials)
-
 client = get_client()
-tts_client = get_tts_client()
 
 
 def text_to_speech(text):
-    """Convert text to speech and return audio bytes"""
-    synthesis_input = texttospeech.SynthesisInput(text=text)
-    
-    voice = texttospeech.VoiceSelectionParams(
-        language_code="de-DE",
-        ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
-    )
-    
-    audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3
-    )
-    
-    response = tts_client.synthesize_speech(
-        input=synthesis_input,
-        voice=voice,
-        audio_config=audio_config
-    )
-    
-    return response.audio_content
+    """Convert text to speech using gTTS and return audio bytes"""
+    tts = gTTS(text=text, lang='de', slow=False)
+    audio_fp = io.BytesIO()
+    tts.write_to_fp(audio_fp)
+    audio_fp.seek(0)
+    return audio_fp.read()
 
 
 def transcribe_wav_file(path, sample_rate, channels):
@@ -514,8 +495,12 @@ if audio_input:
     if entry['examples']:
         if st.button("🔊 Play Example Sentence", key=f"tts_{entry['word']}"):
             with st.spinner("Generating audio..."):
-                audio_content = text_to_speech(entry['examples'][0])
-                st.audio(audio_content, format='audio/mp3')
+                try:
+                    audio_content = text_to_speech(entry['examples'][0])
+                    st.audio(audio_content, format='audio/mp3')
+                except Exception as e:
+                    st.error(f"Error generating audio: {str(e)}")
+                    st.info("Make sure the Text-to-Speech API is enabled in your Google Cloud project.")
 
     if st.button("Next"):
         pick_new_word()
