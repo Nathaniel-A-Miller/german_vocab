@@ -4,4 +4,4 @@ google-cloud-speech
 rapidfuzz
 streamlit-webrtc
 numpy
-google-cloud-texttospeech
+gTTS
