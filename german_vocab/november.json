@@ -245,7 +245,7 @@
     "gender": "das",
     "pos": "noun",
     "countability": "uncountable",
-    "meaning": "site, grounds",
+    "meaning": "site, grounds; complex, compound",
     "examples": ["Das Gelände gehört der Stadt."],
     "set": "November"
   },
@@ -305,7 +305,7 @@
     "gender": "die",
     "pos": "noun",
     "countability": "countable",
-    "meaning": "law suit",
+    "meaning": "lawsuit",
     "examples": ["Die Klage wurde eingereicht."],
     "set": "November"
   },
@@ -360,16 +360,6 @@
     "set": "November"
   },
   {
-    "word": "geistig beeinträchtigt",
-    "plural": "",
-    "gender": "",
-    "pos": "adjective",
-    "countability": "",
-    "meaning": "mentally impaired",
-    "examples": ["Der Patient ist geistig beeinträchtigt."],
-    "set": "November"
-  },
-  {
     "word": "beeinträchtigen",
     "plural": "",
     "gender": "",
@@ -395,7 +385,7 @@
     "gender": "",
     "pos": "verb",
     "countability": "",
-    "meaning": "to assume; to take as one's starting point",
+    "meaning": "with von: to assume; to take as one's starting point",
     "examples": ["Wir gehen davon aus, dass er kommt."],
     "set": "November"
   },
@@ -440,12 +430,12 @@
     "set": "November"
   },
   {
-    "word": "auf etw. setzen",
+    "word": "setzen",
     "plural": "",
     "gender": "",
     "pos": "verb",
     "countability": "",
-    "meaning": "to bet on; to focus on",
+    "meaning": "with auf: to bet on; to focus on",
     "examples": ["Er setzt auf Qualität."],
     "set": "November"
   },
@@ -510,12 +500,12 @@
     "set": "November"
   },
   {
-    "word": "Luftfahrtmesse",
-    "plural": "Luftfahrtmessen",
+    "word": "Messe",
+    "plural": "Messen",
     "gender": "die",
     "pos": "noun",
     "countability": "countable",
-    "meaning": "aviation trade fair",
+    "meaning": "fair, exhibition",
     "examples": ["Die Luftfahrtmesse findet dieses Wochenende statt."],
     "set": "November"
   },
@@ -527,16 +517,6 @@
     "countability": "",
     "meaning": "to amount to",
     "examples": ["Die Kosten belaufen sich auf 300 Euro."],
-    "set": "November"
-  },
-  {
-    "word": "Mittelstreckenflugzeug",
-    "plural": "Mittelstreckenflugzeuge",
-    "gender": "das",
-    "pos": "noun",
-    "countability": "countable",
-    "meaning": "medium-range aircraft",
-    "examples": ["Mittelstreckenflugzeuge werden häufig eingesetzt."],
     "set": "November"
   },
   {
@@ -723,7 +703,7 @@
     "gender": "die",
     "pos": "noun",
     "meaning": "citation (under citation of)",
-    "examples": ["„Unter Berufung auf mehrere Quellen argumentierte er, dass die aktuellen Forschungsergebnisse eine neue Perspektive auf das Thema bieten.“"],
+    "examples": ["Unter Berufung auf mehrere Quellen argumentierte er, dass die aktuellen Forschungsergebnisse eine neue Perspektive auf das Thema bieten."],
     "set": "November"
   },
   {
@@ -763,15 +743,6 @@
     "set": "November"
   },
   {
-    "word": "Schädlingsbekämpfungsmittel",
-    "plural": "Schädlingsbekämpfungsmittel",
-    "gender": "das",
-    "pos": "noun",
-    "meaning": "pesticide",
-    "examples": ["Das Schädlingsbekämpfungsmittel sollte sparsam verwendet werden."],
-    "set": "November"
-  },
-  {
     "word": "anbringen",
     "plural": "",
     "gender": "",
@@ -799,20 +770,20 @@
     "set": "November"
   },
   {
-    "word": "sich verlassen auf",
+    "word": "sich verlassen",
     "plural": "",
     "gender": "",
     "pos": "reflexive verb",
-    "meaning": "to bank on, to count on",
+    "meaning": "(With auf) to bank on, to count on",
     "examples": ["Auf ihn kann man sich immer verlassen."],
     "set": "November"
   },
   {
-    "word": "Alleinerziehender",
-    "plural": "Alleinerziehende",
-    "gender": "der",
-    "pos": "noun",
-    "meaning": "single parent",
+    "word": "erziehen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "meaning": "to raise (a child)",
     "examples": ["Als Alleinerziehender hat er viele Herausforderungen zu meistern."],
     "set": "November"
   }
