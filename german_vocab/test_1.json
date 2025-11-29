@@ -1,1 +1,790 @@
-
+[
+  {
+    "word": "herummeckern",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to gripe, complain",
+    "examples": ["Er muss ständig an allem herummeckern."],
+    "set": "1"
+  },
+  {
+    "word": "nörgeln",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to complain, nag",
+    "examples": ["Er nörgelt den ganzen Tag über Kleinigkeiten."],
+    "set": "1"
+  },
+  {
+    "word": "stolpern",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to stumble",
+    "examples": ["Er stolperte über eine lose Fliese."],
+    "set": "1"
+  },
+  {
+    "word": "Auftritt",
+    "plural": "Auftritte",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "performance",
+    "examples": ["die nächtlichen Auftritte"],
+    "set": "1"
+  },
+  {
+    "word": "Clou",
+    "plural": "Clous",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "the key point, the highlight",
+    "examples": ["Der Clou an der Sache ist, dass niemand es bemerkt hat."],
+    "set": "1"
+  },
+  {
+    "word": "unterhaltsam",
+    "plural": "",
+    "gender": "",
+    "pos": "adjective",
+    "countability": "",
+    "meaning": "entertaining",
+    "examples": ["Der Film war sehr unterhaltsam."],
+    "set": "1"
+  },
+  {
+    "word": "suhlen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to wallow",
+    "examples": ["Die Schweine suhlen sich im Schlamm."],
+    "set": "1"
+  },
+  {
+    "word": "Mehrkornbrot",
+    "plural": "Mehrkornbrote",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "multigrain bread",
+    "examples": ["dahergelaufenes Mehrkornbrot mit seinen zehn Getreidesorten"],
+    "set": "1"
+  },
+  {
+    "word": "Mehl",
+    "plural": "",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "uncountable",
+    "meaning": "flour",
+    "examples": ["Ich brauche Mehl für den Kuchen."],
+    "set": "1"
+  },
+  {
+    "word": "Himmelsrichtung",
+    "plural": "Himmelsrichtungen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "cardinal direction",
+    "examples": ["Welche Himmelsrichtung zeigt der Kompass an?"],
+    "set": "1"
+  },
+  {
+    "word": "Ausbau",
+    "plural": "Ausbauten",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "expansion",
+    "examples": ["Der Ausbau der Infrastruktur geht voran."],
+    "set": "1"
+  },
+  {
+    "word": "ausgleichen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to balance, to make up for",
+    "examples": ["Wir versuchen, den Rückstand gegenüber dem Westen auszugleichen."],
+    "set": "1"
+  },
+  {
+    "word": "wahrnehmen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to perceive",
+    "examples": ["Er kann feine Unterschiede kaum wahrnehmen."],
+    "set": "1"
+  },
+  {
+    "word": "Verkehrsmittel",
+    "plural": "Verkehrsmittel",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "means of transport",
+    "examples": ["Öffentliche Verkehrsmittel sind oft zuverlässig."],
+    "set": "1"
+  },
+  {
+    "word": "Einrichtung",
+    "plural": "Einrichtungen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "facility",
+    "examples": ["Die städtischen Einrichtungen werden modernisiert."],
+    "set": "1"
+  },
+  {
+    "word": "benachteiligen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to disadvantage",
+    "examples": ["Das neue Gesetz benachteiligt kleinere Firmen."],
+    "set": "1"
+  },
+  {
+    "word": "sich beschweren",
+    "plural": "",
+    "gender": "",
+    "pos": "reflexive verb",
+    "countability": "",
+    "meaning": "to complain",
+    "examples": ["Er beschwert sich über den Lärm."],
+    "set": "1"
+  },
+  {
+    "word": "unzureichend",
+    "plural": "",
+    "gender": "",
+    "pos": "adjective",
+    "countability": "",
+    "meaning": "insufficient",
+    "examples": ["Die Informationen waren unzureichend."],
+    "set": "1"
+  },
+  {
+    "word": "vorläufig",
+    "plural": "",
+    "gender": "",
+    "pos": "adjective",
+    "countability": "",
+    "meaning": "provisional",
+    "examples": ["Das ist nur eine vorläufige Entscheidung."],
+    "set": "1"
+  },
+  {
+    "word": "Gehalt",
+    "plural": "Gehälter",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "salary",
+    "examples": ["Er verhandelt sein Gehalt jedes Jahr neu."],
+    "set": "1"
+  },
+  {
+    "word": "Auflage",
+    "plural": "Auflagen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "conditions, restrictions",
+    "examples": ["Die Auflagen für das Projekt sind streng."],
+    "set": "2"
+  },
+  {
+    "word": "ermitteln",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to investigate",
+    "examples": ["Die Polizei ermittelt in dem Fall."],
+    "set": "2"
+  },
+  {
+    "word": "schunkeln",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to sway in rhythm",
+    "examples": ["Auf dem Fest schunkelten alle zur Musik."],
+    "set": "2"
+  },
+  {
+    "word": "Dreigestirn",
+    "plural": "Dreigestirne",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "triumvirate",
+    "examples": ["Das politische Dreigestirn traf eine Entscheidung."],
+    "set": "2"
+  },
+  {
+    "word": "Gelände",
+    "plural": "",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "uncountable",
+    "meaning": "site, grounds; complex, compound",
+    "examples": ["Das Gelände gehört der Stadt."],
+    "set": "2"
+  },
+  {
+    "word": "Tagung",
+    "plural": "Tagungen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "conference",
+    "examples": ["Die Tagung findet nächste Woche statt."],
+    "set": "2"
+  },
+  {
+    "word": "Kundgebung",
+    "plural": "Kundgebungen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "rally",
+    "examples": ["Die Kundgebung zog viele Menschen an."],
+    "set": "2"
+  },
+  {
+    "word": "Insasse",
+    "plural": "Insassen",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "occupant, passenger, inmate",
+    "examples": ["Der Insasse wurde verletzt."],
+    "set": "2"
+  },
+  {
+    "word": "Urkunde",
+    "plural": "Urkunden",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "certificate",
+    "examples": ["Er erhielt eine Urkunde für seine Leistungen."],
+    "set": "2"
+  },
+  {
+    "word": "genehmigen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to approve, authorize",
+    "examples": ["Die Behörde genehmigt den Antrag."],
+    "set": "2"
+  },
+  {
+    "word": "Klage",
+    "plural": "Klagen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "lawsuit",
+    "examples": ["Die Klage wurde eingereicht."],
+    "set": "2"
+  },
+  {
+    "word": "verklagen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to sue",
+    "examples": ["Er will die Firma verklagen."],
+    "set": "2"
+  },
+  {
+    "word": "Rechtsanwalt",
+    "plural": "Rechtsanwälte",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "lawyer",
+    "examples": ["Der Rechtsanwalt vertritt den Mandanten vor Gericht."],
+    "set": "2"
+  },
+  {
+    "word": "zurückweisen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to reject",
+    "examples": ["Er weist den Vorschlag zurück."],
+    "set": "2"
+  },
+  {
+    "word": "Hinrichtung",
+    "plural": "Hinrichtungen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "execution",
+    "examples": ["Die Hinrichtung fand im Morgengrauen statt."],
+    "set": "2"
+  },
+  {
+    "word": "geständig",
+    "plural": "",
+    "gender": "",
+    "pos": "adjective",
+    "countability": "",
+    "meaning": "confessing",
+    "examples": ["Der geständige Mörder legte ein umfassendes Geständnis ab."],
+    "set": "2"
+  },
+  {
+    "word": "beeinträchtigen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to impair; to compromise",
+    "examples": ["Lärm kann die Konzentration beeinträchtigen."],
+    "set": "2"
+  },
+  {
+    "word": "Schwangerschaft",
+    "plural": "Schwangerschaften",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "pregnancy",
+    "examples": ["Die Schwangerschaft verlief ohne Komplikationen."],
+    "set": "2"
+  },
+  {
+    "word": "ausgehen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "with von: to assume; to take as one's starting point",
+    "examples": ["Wir gehen davon aus, dass er kommt."],
+    "set": "2"
+  },
+  {
+    "word": "Darm",
+    "plural": "Därme",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "intestine",
+    "examples": ["Der Darm spielt eine wichtige Rolle bei der Verdauung."],
+    "set": "2"
+  },
+  {
+    "word": "jucken",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to itch",
+    "examples": ["Mein Arm juckt seit gestern."],
+    "set": "3"
+  },
+  {
+    "word": "verdrängen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to suppress; to displace",
+    "examples": ["Alte Gewohnheiten lassen sich schwer verdrängen."],
+    "set": "3"
+  },
+  {
+    "word": "Ballaststoff",
+    "plural": "Ballaststoffe",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "dietary fiber",
+    "examples": ["Ballaststoffe sind wichtig für die Verdauung."],
+    "set": "3"
+  },
+  {
+    "word": "setzen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "with auf: to bet on; to focus on",
+    "examples": ["Er setzt auf Qualität."],
+    "set": "3"
+  },
+  {
+    "word": "billigen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to approve; to condone",
+    "examples": ["Der Ausschuss billigte den Vorschlag."],
+    "set": "3"
+  },
+  {
+    "word": "Ertrag",
+    "plural": "Erträge",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "yield; harvest",
+    "examples": ["Der Ertrag war dieses Jahr besonders hoch."],
+    "set": "3"
+  },
+  {
+    "word": "Kunstdünger",
+    "plural": "Kunstdünger",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "fertilizer",
+    "examples": ["Der Kunstdünger verbessert den Boden."],
+    "set": "3"
+  },
+  {
+    "word": "aufwendig",
+    "plural": "",
+    "gender": "",
+    "pos": "adjective",
+    "countability": "",
+    "meaning": "elaborate; costly; lavish",
+    "examples": ["Die Produktion von Matcha ist sehr aufwendig."],
+    "set": "3"
+  },
+  {
+    "word": "Liegenschaft",
+    "plural": "Liegenschaften",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "property; real estate",
+    "examples": ["Die Liegenschaften wurden verkauft."],
+    "set": "3"
+  },
+  {
+    "word": "vermeintlich",
+    "plural": "",
+    "gender": "",
+    "pos": "adjective",
+    "countability": "",
+    "meaning": "alleged",
+    "examples": ["Der vermeintliche Täter war unschuldig."],
+    "set": "3"
+  },
+  {
+    "word": "Messe",
+    "plural": "Messen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "fair, exhibition",
+    "examples": ["Die Luftfahrtmesse findet dieses Wochenende statt."],
+    "set": "3"
+  },
+  {
+    "word": "sich belaufen",
+    "plural": "",
+    "gender": "",
+    "pos": "reflexive verb",
+    "countability": "",
+    "meaning": "to amount to",
+    "examples": ["Die Kosten belaufen sich auf 300 Euro."],
+    "set": "3"
+  },
+  {
+    "word": "langfristig",
+    "plural": "",
+    "gender": "",
+    "pos": "adjective",
+    "countability": "",
+    "meaning": "long-term",
+    "examples": ["Wir planen langfristig."],
+    "set": "3"
+  },
+  {
+    "word": "versteigern",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to auction",
+    "examples": ["Das Gemälde wurde versteigert."],
+    "set": "3"
+  },
+  {
+    "word": "Auszeichnung",
+    "plural": "Auszeichnungen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "award",
+    "examples": ["Sie vergaben eine Auszeichnung an ihn."],
+    "set": "3"
+  },
+  {
+    "word": "Sattelzug",
+    "plural": "Sattelzüge",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "tractor trailer",
+    "examples": ["Der Sattelzug blockierte die Straße."],
+    "set": "3"
+  },
+  {
+    "word": "Netzschalter",
+    "plural": "Netzschalter",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "power switch",
+    "examples": ["Der Netzschalter befindet sich hinten am Gerät."],
+    "set": "3"
+  },
+  {
+    "word": "Scharnier",
+    "plural": "Scharniere",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "hinge",
+    "examples": ["Das Scharnier der Tür quietscht."],
+    "set": "3"
+  },
+  {
+    "word": "Bügel",
+    "plural": "Bügel",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "clothes hanger; arm of glasses",
+    "examples": ["Der Bügel der Brille ist verbogen."],
+    "set": "3"
+  },
+  {
+    "word": "beschleunigen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "countability": "",
+    "meaning": "to accelerate",
+    "examples": ["Das Auto beschleunigt schnell."],
+    "set": "3"
+  },
+  {
+    "word": "Loch",
+    "plural": "Löcher",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "hole",
+    "examples": ["Das Loch im Boden ist gefährlich.", "Ein Schwarzes Loch verschlingt alles in seiner Nähe."],
+    "set": "4"
+  },
+  {
+    "word": "Gericht",
+    "plural": "Gerichte",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "dish; prepared meal",
+    "examples": ["Das Gericht scheint ein Schüssel mit Suppe oder Eintopf zu sein."],
+    "set": "4"
+  },
+  {
+    "word": "Schüssel",
+    "plural": "Schüsseln",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "bowl",
+    "examples": ["Das Gericht scheint ein Schüssel mit Suppe oder Eintopf zu sein."],
+    "set": "4"
+  },
+  {
+    "word": "Suppe",
+    "plural": "Suppen",
+    "gender": "die",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "soup",
+    "examples": ["Das Gericht scheint ein Schüssel mit Suppe oder Eintopf zu sein."],
+    "set": "4"
+  },
+  {
+    "word": "Eintopf",
+    "plural": "Eintöpfe",
+    "gender": "der",
+    "pos": "noun",
+    "countability": "countable",
+    "meaning": "stew",
+    "examples": ["Das Gericht scheint ein Schüssel mit Suppe oder Eintopf zu sein."],
+    "set": "4"
+  },
+  {
+    "word": "tätig",
+    "plural": "",
+    "gender": "",
+    "pos": "adjective",
+    "countability": "",
+    "meaning": "employed; active (professionally)",
+    "examples": ["Ist er noch im Unternehmen tätig?"],
+    "set": "4"
+  },
+  {
+    "word": "sich versprechen",
+    "plural": "",
+    "gender": "",
+    "pos": "reflexive verb",
+    "countability": "",
+    "meaning": "to misspeak; (with 'von') to expect",
+    "examples": ["Ich verspreche mir viel von dieser Entscheidung."],
+    "set": "4"
+  },
+  {
+    "word": "Wachstum",
+    "plural": "",
+    "gender": "das",
+    "pos": "noun",
+    "countability": "uncountable",
+    "meaning": "growth",
+    "examples": ["Nachhaltiges Wachstum ist wichtig für die Zukunft."],
+    "set": "4"
+  },
+  {
+    "word": "entgegenkommen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "meaning": "to accommodate (wishes)",
+    "examples": ["Wir kommen deinen Wünschen gern entgegen."],
+    "set": "4"
+  },
+  {
+    "word": "Berufung",
+    "plural": "Berufungen",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "appeal (legal); to file an appeal",
+    "examples": ["Der Anwalt hat eine Berufung eingelegt."],
+    "set": "4"
+  },
+  {
+    "word": "Berufung",
+    "plural": "Berufungen",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "citation (under citation of)",
+    "examples": ["Unter Berufung auf mehrere Quellen argumentierte er, dass die aktuellen Forschungsergebnisse eine neue Perspektive auf das Thema bieten."],
+    "set": "4"
+  },
+  {
+    "word": "Schlagabtausch",
+    "plural": "Schlagabtausche",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "clash, exchange of blows/arguments",
+    "examples": ["Im Parlament kam es zu einem heftigen Schlagabtausch."],
+    "set": "4"
+  },
+  {
+    "word": "Gewahrsam",
+    "plural": "",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "custody; to take into custody",
+    "examples": ["Die Polizei nahm den Verdächtigen in Gewahrsam."],
+    "set": "4"
+  },
+  {
+    "word": "Schädling",
+    "plural": "Schädlinge",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "pest, vermin",
+    "examples": ["Der Landwirt kämpft jedes Jahr gegen Schädlinge."],
+    "set": "4"
+  },
+  {
+    "word": "Einweihungsparty",
+    "plural": "Einweihungspartys",
+    "gender": "die",
+    "pos": "noun",
+    "meaning": "housewarming party",
+    "examples": ["Wir wurden zu ihrer Einweihungsparty eingeladen."],
+    "set": "4"
+  },
+  {
+    "word": "anbringen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "meaning": "attach, install, fix",
+    "examples": ["Er hat den Spiegel an der Wand angebracht."],
+    "set": "4"
+  },
+  {
+    "word": "Gerüst",
+    "plural": "Gerüste",
+    "gender": "das",
+    "pos": "noun",
+    "meaning": "scaffolding",
+    "examples": ["Das Gerüst wurde für die Renovierungsarbeiten aufgebaut."],
+    "set": "4"
+  },
+  {
+    "word": "Haken",
+    "plural": "Haken",
+    "gender": "der",
+    "pos": "noun",
+    "meaning": "hook",
+    "examples": ["Der Mantel hängt am Haken neben der Tür."],
+    "set": "4"
+  },
+  {
+    "word": "sich verlassen",
+    "plural": "",
+    "gender": "",
+    "pos": "reflexive verb",
+    "meaning": "(With auf) to bank on, to count on",
+    "examples": ["Auf ihn kann man sich immer verlassen."],
+    "set": "4"
+  },
+  {
+    "word": "erziehen",
+    "plural": "",
+    "gender": "",
+    "pos": "verb",
+    "meaning": "to raise (a child)",
+    "examples": ["Als Alleinerziehender hat er viele Herausforderungen zu meistern."],
+    "set": "4"
+  }
+]
