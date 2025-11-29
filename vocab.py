@@ -168,26 +168,22 @@ file_choice = st.sidebar.selectbox(
     key="file_selector"
 )
 
-# Change vocab file
 if file_choice != st.session_state.selected_file:
     st.session_state.selected_file = file_choice
 
-    # Initialize progress for this file if needed
-    if file_choice not in st.session_state.progress:
-        st.session_state.progress[file_choice] = {
-            "reviewed": set(),
-            "correct": 0,
-            "wrong": 0,
-            "mistakes": []
-        }
+    # ALWAYS reset progress for a newly selected file
+    st.session_state.progress[file_choice] = {
+        "reviewed": set(),
+        "correct": 0,
+        "wrong": 0,
+        "mistakes": []
+    }
 
     # Reset mode-specific session state
     st.session_state.review_queue = []
-    st.session_state.current = None  # ← THIS IS THE FIX
+    st.session_state.current = None
 
-    progress = st.session_state.progress[file_choice]
-
-    st.rerun()  # ← Force UI to update to the new file
+    st.rerun()
 
 filtered_vocab = [
     v for v in vocab_all
