@@ -66,44 +66,30 @@ def transcribe_wav_file(path, sample_rate, channels):
 
 def check_answer(entry, transcript):
     t = transcript.lower().strip()
-    tokens = t.split()
 
     pos = entry["pos"]
     word = entry["word"].lower().strip()
     gender = entry["gender"].lower().strip()
     plural = entry["plural"].lower().strip()
 
-    # Verbs
+    # ---------- VERBS ----------
     if pos in ["verb", "reflexive verb"]:
-        parts = word.split()
-        return all(p in tokens for p in parts)
+        return t == word
 
-    # Adjectives / Adverbs
+    # ---------- ADJECTIVES / ADVERBS ----------
     if "adjective" in pos or "adverb" in pos:
-        return word in tokens
+        return t == word
 
-    # Non-noun fallback
+    # ---------- NON-NOUN FALLBACK ----------
     if not pos.startswith("noun"):
-        return word in tokens
+        return t == word
 
-    # Nouns
-    singular_form = f"{gender} {word}".strip()
-    singular_tokens = singular_form.split()
-    plural_tokens = plural.split() if plural else []
+    # ---------- NOUNS ----------
+    singular_form = f"{gender} {word}".strip()      # e.g. "die berufung"
+    plural_form   = plural.strip()                  # e.g. "berufungen"
 
-    # singular?
-    for i in range(len(tokens) - len(singular_tokens) + 1):
-        if tokens[i:i+len(singular_tokens)] == singular_tokens:
-            return True
-
-    # plural?
-    if plural:
-        for i in range(len(tokens) - len(plural_tokens) + 1):
-            if tokens[i:i+len(plural_tokens)] == plural_tokens:
-                return True
-
-    return False
-
+    # Accept EXACTLY singular or EXACTLY plural — nothing else.
+    return t == singular_form or (plural and t == plural_form)
 
 # ============================================================
 # SESSION STATE INITIALIZATION
