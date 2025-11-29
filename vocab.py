@@ -458,7 +458,8 @@ if audio_input:
                 if entry["word"] in st.session_state.review_queue:
                     st.session_state.review_queue.remove(entry["word"])
             
-            st.success("Marked as correct! ✓")
+            # Pick next word and advance
+            pick_new_word()
             st.rerun()
 
     # ============================================================
