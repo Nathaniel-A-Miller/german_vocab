@@ -254,7 +254,16 @@ if entry is None:
 # PROMPT
 # ============================================================
 
-if st.session_state.mode == "Easy Mode (Show German)":
+# STUDY MODE — SHOW MEANING ONLY
+if st.session_state.mode == "Study":
+    st.markdown(f"""
+### Say the correct German for:
+
+## *{entry['meaning']}*
+""")
+
+# EASY MODE — SHOW GERMAN DIRECTLY
+elif st.session_state.mode == "Easy Mode (Show German)":
     st.markdown(f"""
 ### Say this German aloud:
 
@@ -264,7 +273,6 @@ if st.session_state.mode == "Easy Mode (Show German)":
 
 **Meaning:** *{entry['meaning']}*
 """)
-
 
 st.markdown("""
 - **Noun:** article + singular → plural  
