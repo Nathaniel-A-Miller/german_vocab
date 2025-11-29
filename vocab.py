@@ -426,9 +426,10 @@ if audio_input:
                 w = st.session_state.review_queue.pop(idx)
                 st.session_state.review_queue.append(w)
 
-            # ONE-ITEM-LEFT CASE → modify message
+            # ONE-ITEM-LEFT CASE → reset to clean question view
             if len(st.session_state.review_queue) == 1:
-                message = "Not quite — try again."
+                st.error("Not quite. Try again.")
+                st.rerun()
 
         st.error(message)
         
