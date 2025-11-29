@@ -139,6 +139,9 @@ if "mode" not in st.session_state:
 if "easy_mode" not in st.session_state:
     st.session_state.easy_mode = False
 
+if "selected_set" not in st.session_state:
+    st.session_state.selected_set = "All sets"
+
 if "progress" not in st.session_state:
     st.session_state.progress = {}
 
