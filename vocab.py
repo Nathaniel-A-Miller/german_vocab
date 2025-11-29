@@ -189,7 +189,7 @@ filtered_vocab = [
 
 mode_choice = st.sidebar.selectbox(
     "Mode",
-    ["Study", "Review Mistakes"],
+    ["Study", "Review Mistakes", "Easy Mode (Show German)"],
     key="mode_selector"
 )
 
@@ -233,7 +233,7 @@ if mode_choice == "Review Mistakes":
 # ============================================================
 
 def pick_new_word():
-    if st.session_state.mode == "Study":
+    if st.session_state.mode in ["Study", "Easy Mode (Show German)"]:
         remaining = [
             v for v in filtered_vocab
             if v["word"] not in progress["reviewed"]
@@ -270,10 +270,19 @@ if entry is None:
 
 
 # ============================================================
-# Prompt
+# Prompt (Study vs Review vs Easy Mode)
 # ============================================================
 
-st.markdown(f"""
+if st.session_state.mode == "Easy Mode (Show German)":
+    st.markdown(f"""
+### Say this German aloud:
+## **{entry['gender']} {entry['word']}**  
+### Plural: **{entry['plural'] or "—"}**  
+#### Meaning: *{entry['meaning']}*
+""")
+
+else:
+    st.markdown(f"""
 ### Say the correct German for:  
 ## {entry['meaning']}
 """)
@@ -284,6 +293,7 @@ st.markdown("""
 - **Reflexive verb:** both parts  
 - **Adjective/Adverb:** lemma  
 """)
+
 
 
 # ============================================================
