@@ -55,17 +55,23 @@ def text_to_speech(text):
     return audio_fp.read()
 
 
-def transcribe_wav_file(path, sample_rate, channels):
+def transcribe_wav_file(path, sample_rate, channels, expected_phrases=None):
     with open(path, "rb") as f:
         audio_bytes = f.read()
 
     audio = speech.RecognitionAudio(content=audio_bytes)
+
+    # Create speech context with expected phrases
+    speech_contexts = []
+    if expected_phrases:
+        speech_contexts = [speech.SpeechContext(phrases=expected_phrases, boost=15)]
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         language_code="de-DE",
         sample_rate_hertz=sample_rate,
         audio_channel_count=channels,
+        speech_contexts=speech_contexts,  # Add context hints
     )
 
     response = client.recognize(config=config, audio=audio)
@@ -382,7 +388,13 @@ if audio_input:
 
     st.write("⏳ Transcribing...")
 
-    transcript = transcribe_wav_file(audio_path, sample_rate, channels)
+    expected_phrases = [entry['word']]
+    if entry['pos'].startswith('noun') and entry['gender']:
+        expected_phrases.append(f"{entry['gender']} {entry['word']}")
+    if entry['plural'] and entry['plural'] != "—":
+        expected_phrases.append(entry['plural'])
+
+    transcript = transcribe_wav_file(audio_path, sample_rate, channels, expected_phrases)
     st.markdown(f"### You said:\n**{transcript}**")
 
     correct = check_answer(entry, transcript)
